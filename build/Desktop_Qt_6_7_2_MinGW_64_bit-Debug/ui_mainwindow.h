@@ -30,7 +30,6 @@ public:
     QLineEdit *lineEditCity;
     QPushButton *pushButtonGetAQI;
     QLabel *labelDetails;
-    QLabel *labelAQI;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -38,7 +37,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(800, 600);
+        MainWindow->resize(917, 704);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -58,15 +57,10 @@ public:
 
         verticalLayout->addWidget(labelDetails);
 
-        labelAQI = new QLabel(centralwidget);
-        labelAQI->setObjectName("labelAQI");
-
-        verticalLayout->addWidget(labelAQI);
-
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 800, 25));
+        menubar->setGeometry(QRect(0, 0, 917, 25));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
@@ -81,8 +75,7 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         pushButtonGetAQI->setText(QCoreApplication::translate("MainWindow", "Search Location", nullptr));
-        labelDetails->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
-        labelAQI->setText(QCoreApplication::translate("MainWindow", "The AQI for your City is:", nullptr));
+        labelDetails->setText(QCoreApplication::translate("MainWindow", "Info about Your City:", nullptr));
     } // retranslateUi
 
 };

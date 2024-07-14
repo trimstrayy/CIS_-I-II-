@@ -21,9 +21,12 @@ public:
     ~MainWindow();
 
 private slots:
-    void fetchAQI();
+    void fetchresult();
     void onCityResult(QNetworkReply *reply);
     void onAQIResult(QNetworkReply *reply);
+    QString getQualitativeName(int index);
+
+
 
 private:
     Ui::MainWindow *ui;
@@ -33,7 +36,9 @@ private:
     QLineEdit *lineEditCity;
     QPushButton *pushButtonGetAQI;
     QLabel *labelAQI;
- QString getQualitativeName(int index);
+// QString getQualitativeName(int index);
+    QString formatJsonString(const QString &jsonString);
+
 };
 
 #endif
