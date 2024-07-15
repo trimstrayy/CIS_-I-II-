@@ -1,7 +1,8 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets quickwidgets #quickwidget - from map
 
+QT += quick location positioning #from map
 CONFIG += c++17
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -26,3 +27,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 # Add the following lines for libcurl
 INCLUDEPATH += C:/Coding/curl/include
 LIBS += -LC:/Coding/curl/lib -lcurl
+
+RESOURCES += \
+    Resources.qrc
