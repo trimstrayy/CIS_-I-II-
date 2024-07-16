@@ -12,6 +12,7 @@
 #include <QTimeZone>
 
 
+void forecast_hourly_4_days(QJsonDocument);
 void forecast_date(QJsonDocument);
 QByteArray response(char []);           // Function to Call API
 void sun_time(QJsonDocument);           // Function to Extract Sunrise and SunSet From Current Weather API
@@ -36,9 +37,9 @@ int main(int argc, char *argv[])
 
     // Initialize libcurl
 
-    QString API_KEY = "c75997502cfcd1b939260acf6e491ec4";
+    QString API_KEY = "01b70166b923c25c030d53acdc92e93d";
 
-    char url[150] = "http://api.openweathermap.org/geo/1.0/direct?q=Kathmandu&limit=5&appid=c75997502cfcd1b939260acf6e491ec4";
+    char url[150] = "http://api.openweathermap.org/geo/1.0/direct?q=Dhulikhel&limit=5&appid=c75997502cfcd1b939260acf6e491ec4";
 
     QByteArray responseData = response(url);            //Fetching the Data
 
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
 
     // ------------------------------------------------------------------------------
     // Current Weather API CALL
-    std::string string_weather_url = "https://api.openweathermap.org/data/2.5/weather?lat="+latitude.toStdString()+"&lon="+longitude.toStdString()+"&appid=c75997502cfcd1b939260acf6e491ec4";
+    std::string string_weather_url = "https://api.openweathermap.org/data/2.5/weather?lat="+latitude.toStdString()+"&lon="+longitude.toStdString()+"&appid="+API_KEY.toStdString();
     char char_weather_url[150];
 
     // Converting std::string to char type
@@ -96,7 +97,7 @@ int main(int argc, char *argv[])
 
     // ------------------------------------------------------------------------------------------------
     // Call 5 day / 3 hour forecast data
-    std::string string_forecast_5Days_3hr_url = "api.openweathermap.org/data/2.5/forecast?lat="+latitude.toStdString()+"&lon="+longitude.toStdString()+"&appid=c75997502cfcd1b939260acf6e491ec4";
+    std::string string_forecast_5Days_3hr_url = "api.openweathermap.org/data/2.5/forecast?lat="+latitude.toStdString()+"&lon="+longitude.toStdString()+"&appid="+API_KEY.toStdString();
     char char_forecast_5Days_3hr_url[150];
 
     // Converting std::string to char type
@@ -120,11 +121,59 @@ int main(int argc, char *argv[])
     //Function Call
     forecast_date(forecast_jsonDoc);
 
+
+    //------------------------------------------------------------------------------------------------
+    //Call hourly forecast data
+    std::string string_forecast_4Days_hr_url = "https://pro.openweathermap.org/data/2.5/forecast/hourly?lat="+latitude.toStdString()+"&lon="+longitude.toStdString()+"&appid="+API_KEY.toStdString();
+    char char_forecast_4Days_hr_url[150];
+
+    //Converting std::string to char type
+    strcpy(char_forecast_4Days_hr_url, string_forecast_4Days_hr_url.c_str());
+
+    //Function Call
+    QByteArray hourly_response_data = response(char_forecast_4Days_hr_url);
+
+    // Triming any leading/trailing whitespace
+    hourly_response_data = hourly_response_data.trimmed();
+
+    // Parsing the JSON Data
+    QJsonDocument hourly_jsonDoc = QJsonDocument::fromJson(hourly_response_data, & error);
+
+    // Error Testing
+    if (error.error != QJsonParseError::NoError){
+        qWarning() << "Error parsing JSON:" << error.errorString();
+        return -1;
+    }
+
+    // Function Call
+    forecast_hourly_4_days(hourly_jsonDoc);
+
     // Displaying Widget
     MainWindow w;
     w.show();
 
     return a.exec();
+}
+
+
+void forecast_hourly_4_days(QJsonDocument jsonDoc)      // Call 4 day / hour forecast data
+{
+    if(!jsonDoc.isObject()) {
+        qDebug() << "JSON is not an object.";
+    }
+
+    QJsonObject jsonObj = jsonDoc.object();
+    qDebug() << jsonObj << "\n";
+
+    QJsonArray forecast = jsonObj["list"].toArray();
+
+    for(int i = 0; i < 2; i++)
+    {
+        qDebug() << forecast[i] << "\n";
+    }
+
+
+
 }
 
 

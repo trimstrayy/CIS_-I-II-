@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     // from map ----------------
-    ui->quickWidget->setSource(QUrl(QStringLiteral("qrc:/map_location.qml")));
+    ui->quickWidget->setSource(QUrl(QStringLiteral("qrc:/map.qml")));
     ui->quickWidget->show();
     // end -from map
 }

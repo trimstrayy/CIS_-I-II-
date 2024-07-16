@@ -25,7 +25,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 # Add the following lines for libcurl
-INCLUDEPATH += C:/Coding/curl/include
+INCLUDEPATH += C:/Coding/curl/include \
+               C:/Coding/software/Qt/6.7.2/msvc2019_arm64/include/QtPositioning \
+               C:/Coding/software/Qt/6.7.2/msvc2019_arm64/include/QtLocation
+
 LIBS += -LC:/Coding/curl/lib -lcurl
 
 RESOURCES += \

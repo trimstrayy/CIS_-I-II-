@@ -18,7 +18,7 @@ Rectangle {
         id: mapView
         anchors.fill: parent
         plugin: mapPlugin
-        center: QtPositioning.coordinate(27.7172, 85.3240)  //coordinates of kathmandu
+        center: QtPositioning.coordinate(500.7172, 500.3240)  //coordinates of kathmandu
         zoomLevel: 12
 
         Component.onCompleted: {
