@@ -11,8 +11,9 @@ ApplicationWindow {
    // property int activeIndex: 1                  //TO INDICATE WHERE WE ARE VIEWING
 
 
+
     Image {
-        source: "/home/sryn/Downloads/bg1.jpg"
+        source: "/home/sryn/Pictures/Project Pic src/bg1.jpg"
         anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
         fillMode: Image.PreserveAspectCrop
     }
@@ -39,7 +40,7 @@ ApplicationWindow {
                 radius: 5
 
                 Image {
-                    source: "/home/sryn/Pictures/demo/drawer.png"  // Drawer icon
+                    source: "/home/sryn/Pictures/Project Pic src/drawer.png"  // Drawer icon
                     width: 33
                     height: 32
                     fillMode: Image.PreserveAspectFit
@@ -99,6 +100,28 @@ ApplicationWindow {
                 fillMode: Image.PreserveAspectFit
                 Layout.alignment: Qt.AlignVCenter
             }
+               // Button {
+               //          text: "Click Me"
+               //          anchors.centerIn: parent
+               //          onClicked: {
+               //              console.log("")
+               //              //function call
+               //          }
+               //      }
+
+            // Button {
+            //         width: 25
+            //         height: 25
+            //         anchors.centerIn: parent
+
+            //         contentItem: Image {
+            //             source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/drawer.png"
+            //             anchors.centerIn: parent
+            //             fillMode: Image.PreserveAspectFit
+            //         }
+            //     }
+
+
 
             // Search Box
             Rectangle {
@@ -109,7 +132,7 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignVCenter
 
                 Image {
-                    source: "/home/sryn/Pictures/demo/search.png"
+                    source: "/home/sryn/Pictures/Project Pic src/search.png"
                     width: 20
                     height: 20
                     fillMode: Image.PreserveAspectFit
@@ -117,6 +140,7 @@ ApplicationWindow {
                     anchors.right: parent.right
                     anchors.rightMargin: 5
                 }
+
 
                 TextField {
                     placeholderText: "Search"
@@ -157,14 +181,14 @@ ApplicationWindow {
 
                           Rectangle {
                               anchors.fill: parent
-                              color:"transparent"
-                              border.color:"transparent"
+                              color:"#2e2e2e"
+                              border.color:"#2e2e2e"
                               border.width:0
                               radius: 5
 
 
                               Image {                                                          //drawer button inside drawer ko lagi
-                                  source: "/home/sryn/Pictures/demo/drawer.png"
+                                  source: "/home/sryn/Pictures/Project Pic src/drawer.png"
                                   width: 37
                                   height: 37
                                   fillMode: Image.PreserveAspectFit
@@ -191,8 +215,8 @@ ApplicationWindow {
                               radius: 5
 
 
-                              Image {                                                          //home button inside drawer ko lagi
-                                  source: "/home/sryn/Pictures/demo/home.png"
+                             Image {                                                          //home button inside drawer ko lagi
+                                  source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/home.png"
                                   width: 35
                                   height: 35
                                   fillMode: Image.PreserveAspectFit
@@ -205,10 +229,11 @@ ApplicationWindow {
                                   }
                               }
                           }
+                }
 
 
 
-                      }
+
 
                     //--------------------------------------------------------------------------------------------------------------
 
@@ -454,4 +479,298 @@ ApplicationWindow {
 
            }
        }
+    Item {
+        anchors.fill: parent
+        anchors.margins: 20
+
+        GridLayout {
+            anchors.left: parent.left
+            anchors.top: parent.top
+            width: parent.width * 0.4
+            columns: 2
+            rowSpacing: 200
+            columnSpacing: 20
+            anchors.leftMargin: 100
+            anchors.topMargin: 125
+
+
+            // Current Weather (unchanged)
+            Rectangle {
+                // ... (existing code for current weather)
+            }
+
+            // Weather Conditions (unchanged)
+            Rectangle {
+                // ... (existing code for weather conditions)
+            }
+
+            // Hourly Forecast (unchanged)
+            Rectangle {
+                // ... (existing code for hourly forecast)
+            }
+
+            // New box for Humidity, Air Pressure, and Rainometer
+            Rectangle {
+                Layout.columnSpan: 2
+                Layout.fillWidth: true
+                height: 300
+                color: boxColor4 // Assuming you have a boxColor4 defined
+                opacity: 0.8
+                radius: 10
+                anchors.topMargin: parent.topMargin
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 20
+                    spacing: 10
+                    anchors.topMargin: -20
+
+                    Text {
+                        text: "Weather Metrics"
+                        font.pixelSize: 30
+                        font.weight: Font.Bold
+                        color: "black"
+                    }
+
+                    RowLayout {
+                                Layout.fillWidth: true
+                                spacing: 160
+
+
+                                Repeater {
+                                   // anchors.topMargin: -30
+
+                                    model: [
+                                        {label: "Humidity", value: "65%"},
+                                        {label: "Air Pressure", value: "1013 hPa"},
+                                        {label: "Rainometer", value: "2 mm"}
+                                    ]
+
+                                    delegate: ColumnLayout {
+                                        spacing: 5
+
+                                        Text {
+                                            text: modelData.label
+                                            font.pixelSize: 20
+                                            color: "black"
+                                            Layout.alignment: Qt.AlignLeft
+                                        }
+
+                                        Text {
+                                            text: modelData.value
+                                            font.pixelSize: 18
+                                            font.weight: Font.Medium
+                                            color: "#34495e"
+                                            Layout.alignment: Qt.AlignLeft
+                                        }
+                                    }
+                                }
+                    }
+                }
+            }
+        }
+    }
+    //--------------------------------------------------------MAP------------------------------------------------------------------
+    Item {
+        anchors.fill: parent
+        anchors.margins: 20
+
+        GridLayout {
+            anchors.left: parent.left
+            anchors.top: parent.top
+            width: parent.width * 0.4
+            columns: 2
+            rowSpacing: 200
+            columnSpacing: 200
+            anchors.leftMargin: 1000
+            anchors.topMargin: 125
+
+            Rectangle {
+                Layout.columnSpan: 2
+                Layout.fillWidth: true
+                height: 500
+                color: boxColor4
+                opacity: 0.8
+                radius: 10
+
+                Item {
+                    anchors.fill: parent
+
+                    Image {
+                        source: "/home/sryn/Pictures/Project Pic src/map.png"
+                        anchors.fill: parent
+                        fillMode: Image.PreserveAspectCrop
+                    }
+
+                    Rectangle
+                    {
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.margins: 10
+                        width: contentColumn.width + 20
+                        height: contentColumn.height + 20
+                        color: "white"
+                        opacity: 0.7
+                        radius: 5
+
+                       /* Column {
+                            id: contentColumn
+                            anchors.centerIn: parent
+                            spacing: 5
+
+                            Text {
+                                text: "Kathmandu"
+                                font.pixelSize: 24
+                                font.weight: Font.Bold
+                                color: "black"
+                            }
+
+                            Text {
+                                text: "Partly Cloudy"
+                                font.pixelSize: 18
+                                color: "black"
+                            }
+                        }
+                    }
+
+                    Text {
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        anchors.margins: 10
+                        text: "25°C
+                        font.pixelSize: 30
+                        font.weight: Font.Bold
+                        color: "white"
+                        style: Text.Outline
+                        styleColor: "black"
+                    }*/
+                }
+                }
+            }
+        }
+    }
+    //-----------------------------------------------------LATITUDE/LONGITUDE-----------------------------------------------------------
+    Item{
+        anchors.fill: parent
+        anchors.margins: 20
+
+        GridLayout {
+            anchors.left: parent.left
+            anchors.top: parent.top
+            width: parent.width * 0.4
+            columns: 2
+            rowSpacing: 200
+            columnSpacing: 200
+            anchors.leftMargin: 1000    //kati left ma xa
+            anchors.topMargin: 630
+
+            Rectangle {
+                Layout.columnSpan: 2
+                Layout.fillWidth: true
+                height: 60
+                color: "#34495e"//boxColor4 // Assuming you have a boxColor4 defined
+                //opacity: 0.8
+                radius: 10
+                anchors.topMargin: parent.topMargin
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 20
+                    spacing: 10
+                    anchors.topMargin: 10
+
+                    Text {
+                        text: "Latitude / Longitude"
+                        font.pixelSize: 30
+                        font.weight: Font.Bold
+                        color: "#333333"
+                    }
+
+                }
+            }
+        }
+
+    }
+    //---------------------------------------------------------POPULATION---------------------------------------------------
+    Item{
+        anchors.fill: parent
+        anchors.margins: 20
+
+        GridLayout {
+            anchors.left: parent.left
+            anchors.top: parent.top
+            width: parent.width * 0.4
+            columns: 2
+            rowSpacing: 200
+            columnSpacing: 200
+            anchors.leftMargin: 1000    //kati left ma xa
+            anchors.topMargin: 695                              //top  bata kati tala xa
+
+            Rectangle {
+                Layout.columnSpan: 2
+                Layout.fillWidth: true
+                height: 60
+                color:"#34495e"         //boxColor4 // Assuming you have a boxColor4 defined
+                //opacity: 0.8
+                radius: 10
+                anchors.topMargin: parent.topMargin
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 20
+                    spacing: 10
+                    anchors.topMargin: 10
+
+                    Text {
+                        text: "Population"
+                        font.pixelSize: 30
+                        font.weight: Font.Bold
+                        color: "#333333"
+                    }
+
+                }
+            }
+        }
+
+    }
+    //----------------------------------------------------AIR QUALITY INDEX----------------------------------------
+    Item{
+        anchors.fill: parent
+        anchors.margins: 20
+
+        GridLayout {
+            anchors.left: parent.left
+            anchors.top: parent.top
+            width: parent.width * 0.4
+            columns: 2
+            rowSpacing: 200
+            columnSpacing: 200
+            anchors.leftMargin: 1000    //kati left ma xa
+            anchors.topMargin: 760                                //top  bata kati tala xa
+
+            Rectangle {
+                Layout.columnSpan: 2
+                Layout.fillWidth: true
+                height: 60
+                color: "#34495e"//boxColor4 // Assuming you have a boxColor4 defined
+               // opacity: 0.8
+                radius: 10
+                anchors.topMargin: parent.topMargin
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 20
+                    spacing: 10
+                    anchors.topMargin: 10
+
+                    Text {
+                        text: "Air Quality Index"
+                        font.pixelSize: 30
+                        font.weight: Font.Bold
+                        color: "#333333"
+                    }
+
+                }
+            }
+        }
+
+    }
+
+
 }
