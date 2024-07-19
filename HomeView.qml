@@ -12,8 +12,14 @@ ApplicationWindow {
 
 
 
-    Image {
+    /*Image {
         source: "/home/sryn/Pictures/Project Pic src/bg1.jpg"
+        anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
+        fillMode: Image.PreserveAspectCrop
+    }*/
+
+    AnimatedImage {
+        source: "/home/sryn/Pictures/Project Pic src/weathervid1.gif"
         anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
         fillMode: Image.PreserveAspectCrop
     }
@@ -124,36 +130,65 @@ ApplicationWindow {
 
 
             // Search Box
-            Rectangle {
-                width: 200
-                height: 30
-                color: "#2e3256"  // Background color
-                radius: 5
-                Layout.alignment: Qt.AlignVCenter
-
-                Image {
-                    source: "/home/sryn/Pictures/Project Pic src/search.png"
-                    width: 20
-                    height: 20
-                    fillMode: Image.PreserveAspectFit
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 5
-                }
+            // Search Box
+                            Rectangle {
+                                width: 200
+                                height: 30
+                                color: "#2e3256"  // Background color
+                                radius: 5
+                                Layout.alignment: Qt.AlignRight
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
 
 
-                TextField {
-                    placeholderText: "Search"
-                    color: "white"
-                    background: Rectangle {
-                        color: "transparent"
-                    }
-                    font.pixelSize: 14
-                    anchors.fill: parent
-                    anchors.rightMargin: 38  // Adjust the right margin to avoid overlap
-                    padding: 5
-                }
-            }
+                                property string searchText:""
+                                Row {
+                                    anchors.fill: parent
+                                    spacing: 5
+
+                                    TextField {
+                                        id: searchField
+                                        placeholderText: "Search"
+                                        color: "white"
+
+                                        background: Rectangle {
+                                            color: "transparent"
+                                        }
+
+                                        anchors.left: parent.left
+                                        anchors.right: searchButton.left
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        leftPadding: 5
+                                        rightPadding: 5
+                                        padding: 5
+                                    }
+
+                                    Button {
+                                            id: searchButton
+                                            width: 25
+                                            height: 25
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            anchors.right: parent.right
+                                            anchors.rightMargin: 5
+                                            background: Rectangle {
+                                                            color: "transparent"
+                                                            border.color: "transparent"
+                                                        }
+
+                                            contentItem: Image {
+                                                source: "/home/sryn/Pictures/Project Pic src/search.png"
+                                                fillMode: Image.PreserveAspectFit
+                                                anchors.centerIn: parent
+                                             }
+
+                                            onClicked: {
+
+                                                console.log("Searched Text: ", searchField.text)
+                                                console.log("function call")        //function call
+                                            }
+                                         }
+                                    }
+                                }
         }
     }
 
