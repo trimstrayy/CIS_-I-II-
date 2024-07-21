@@ -12,14 +12,15 @@
 #include <QTimeZone>
 
 
-void forecast_hourly_4_days(QJsonDocument);
-void forecast_date(QJsonDocument);
-QByteArray response(char []);           // Function to Call API
-void sun_time(QJsonDocument);           // Function to Extract Sunrise and SunSet From Current Weather API
-void temperature(QJsonDocument);        // Function to Extract Temperature From Current Weather API
-void weather(QJsonDocument);            // Function to Extract Weather Informatrion From Current Weather API
-QString lat(QJsonDocument);             // Function to Extract Latitude
-QString lon(QJsonDocument);             // Function to Extract Longitude
+QDateTime unixcode_to_realtime(int, int);       // Converts unix code into real time
+void forecast_hourly_4_days(QJsonDocument);     // Call 4 day / hour forecast data
+void forecast_date(QJsonDocument);              // Call 5 day / 3 hour forecast data
+QByteArray response(char []);                   // Function to Call API
+void sun_time(QJsonDocument);                   // Function to Extract Sunrise and SunSet From Current Weather API
+void temperature(QJsonDocument);                // Function to Extract Temperature From Current Weather API
+void weather(QJsonDocument);                    // Function to Extract Weather Informatrion From Current Weather API
+QString lat(QJsonDocument);                     // Function to Extract Latitude
+QString lon(QJsonDocument);                     // Function to Extract Longitude
 
 
 
@@ -167,7 +168,7 @@ void forecast_hourly_4_days(QJsonDocument jsonDoc)      // Call 4 day / hour for
 
     QJsonArray forecast = jsonObj["list"].toArray();
 
-    for(int i = 0; i < 2; i++)
+    for(int i = 0; i < 30; i++)
     {
         qDebug() << forecast[i] << "\n";
     }
@@ -177,7 +178,7 @@ void forecast_hourly_4_days(QJsonDocument jsonDoc)      // Call 4 day / hour for
 }
 
 
-void forecast_date(QJsonDocument jsonDoc)           //Call 5 day / 3 hour forecast data
+void forecast_date(QJsonDocument jsonDoc)           // Call 5 day / 3 hour forecast data
 {
     if(!jsonDoc.isObject()) {
         qDebug() << "JSON is not an object.";
@@ -193,6 +194,15 @@ void forecast_date(QJsonDocument jsonDoc)           //Call 5 day / 3 hour foreca
         qDebug() << "Day" << (i*3/24+1);
         qDebug() << forecast[i] << "\n";
     }
+}
+
+
+QDateTime unixcode_to_realtime(int unix_time, int timezone)     // Converts unix code into real time
+{
+    QDateTime time = QDateTime::fromSecsSinceEpoch(unix_time);
+    QTimeZone timeZone(timezone);
+    time.setTimeZone(timeZone);
+    return time;
 }
 
 
@@ -212,20 +222,13 @@ void sun_time(QJsonDocument jsonDoc)
     int sunset_unix = sun["sunset"].toInteger();
     qDebug() << "Sunset in UNIX Code: " << sunset_unix << "\n";
 
-    //Converting UNIX Code to real time/date
-    QDateTime sunrise = QDateTime::fromSecsSinceEpoch(sunrise_unix);
-    QDateTime sunset = QDateTime::fromSecsSinceEpoch(sunset_unix);
-
-    //Seting the time zone
+    // Fetching Data
     QString time_zone_country = sun["country"].toString();      // Fetching the Country Code from sys
-
     int TimeZone_unix = jsonObj["timezone"].toInteger();        // Fetching timezone from current weather data
 
-    // Set the time zone
-    QTimeZone timeZone(TimeZone_unix);
-
-    sunrise.setTimeZone(timeZone);
-    sunset.setTimeZone(timeZone);
+    // Calling Function unixcode_to_realtime
+    QDateTime sunrise = unixcode_to_realtime(sunrise_unix, TimeZone_unix);
+    QDateTime sunset = unixcode_to_realtime(sunset_unix, TimeZone_unix);
 
     // Format and Displaying the real time
     QString sunriseString = sunrise.toString("yyyy-MM-dd HH:mm:ss");

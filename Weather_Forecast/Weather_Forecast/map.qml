@@ -6,20 +6,27 @@ import QtPositioning 5.15
 import QtQuick.Controls 2.15
 
 Rectangle {
-    width: 1500
-    height: 500
+    id : window
+    //width: 1500
+    //height: 500
 
     Plugin {
-        id: mapPlugin
+        id: googlemapview
         name: "osm"
+        PluginParameter{
+            name: "https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=4913456783de4d6e8f896059fe631d9b"
+            value: "4913456783de4d6e8f896059fe631d9b"
+        }
     }
 
     Map {
-        id: mapView
+        id: mapview
         anchors.fill: parent
-        plugin: mapPlugin
-        center: QtPositioning.coordinate(500.7172, 500.3240)  //coordinates of kathmandu
-        zoomLevel: 12
+        plugin: googlemapview
+        //center: QtPositioning.coordinate(27.7172, 85.3240)  //coordinates of kathmandu
+        zoomLevel:10
+        activeMapType: mapview.supportedMapTypes[mapview.supportedMapTypes.length - 1] //using the steet map - trying to remove the watermark.
+
 
         Component.onCompleted: {
             console.log("Map component loaded")
@@ -27,7 +34,7 @@ Rectangle {
             console.log("Plugin name:", plugin.name)
         }
 
-        MouseArea {
+    /*    MouseArea {
             id: mouseArea
             anchors.fill: parent
             drag.target: mapView
@@ -54,5 +61,6 @@ Rectangle {
                 mapView.zoomLevel += pinch.scale - pinch.previousScale
             }
         }
-    }
+    }*/
+}
 }
