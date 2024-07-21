@@ -12,20 +12,15 @@ ApplicationWindow {
 
 
 
-    /*Image {
-        source: "/home/sryn/Pictures/Project Pic src/bg1.jpg"
-        anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
-        fillMode: Image.PreserveAspectCrop
-    }*/
-
-    AnimatedImage {
-        source: "/home/sryn/Pictures/Project Pic src/weathervid1.gif"
+    Image {
+        source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/bg1.jpg"
         anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
         fillMode: Image.PreserveAspectCrop
     }
 
     // Top navigation bar
     Rectangle {
+        id : mainparent;
         width: parent.width
         height: 50
         color: "#34495e"  // Top bar color
@@ -38,6 +33,7 @@ ApplicationWindow {
 
             // Top rectangle
             Rectangle {
+                id: topparent;
                 width: 34
                 height: 34
                 color: "transparent"
@@ -46,7 +42,7 @@ ApplicationWindow {
                 radius: 5
 
                 Image {
-                    source: "/home/sryn/Pictures/Project Pic src/drawer.png"  // Drawer icon
+                    source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/drawer.png"  // Drawer icon
                     width: 33
                     height: 32
                     fillMode: Image.PreserveAspectFit
@@ -106,89 +102,72 @@ ApplicationWindow {
                 fillMode: Image.PreserveAspectFit
                 Layout.alignment: Qt.AlignVCenter
             }
-               // Button {
-               //          text: "Click Me"
-               //          anchors.centerIn: parent
-               //          onClicked: {
-               //              console.log("")
-               //              //function call
-               //          }
-               //      }
-
-            // Button {
-            //         width: 25
-            //         height: 25
-            //         anchors.centerIn: parent
-
-            //         contentItem: Image {
-            //             source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/drawer.png"
-            //             anchors.centerIn: parent
-            //             fillMode: Image.PreserveAspectFit
-            //         }
-            //     }
-
 
 
             // Search Box
-            // Search Box
-                            Rectangle {
-                                width: 200
-                                height: 30
-                                color: "#2e3256"  // Background color
-                                radius: 5
-                                Layout.alignment: Qt.AlignRight
-                                anchors.right: parent.right
+                Rectangle {
+                    id: searchparent;
+                    width: 200
+                    height: 30
+                    color: "#2e3256"  // Background color
+                    radius: 5
+                    Layout.alignment: Qt.AlignRight
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+
+
+                    property string searchText: ""
+
+                    Row {
+                        anchors.fill: parent
+                        spacing: 5
+
+                        TextField {
+                            id: searchField
+                            placeholderText: "Search"
+                            color: "white"
+
+                            background: Rectangle {
+                                color: "transparent"
+                            }
+
+                            anchors.left: parent.left
+                            anchors.right: searchButton.left
+                            anchors.verticalCenter: parent.verticalCenter
+                            leftPadding: 5
+                            rightPadding: 5
+                            padding: 5
+                        }
+
+                        Button {
+                                id: searchButton
+                                width: 25
+                                height: 25
                                 anchors.verticalCenter: parent.verticalCenter
-
-
-                                property string searchText:""
-                                Row {
-                                    anchors.fill: parent
-                                    spacing: 5
-
-                                    TextField {
-                                        id: searchField
-                                        placeholderText: "Search"
-                                        color: "white"
-
-                                        background: Rectangle {
-                                            color: "transparent"
-                                        }
-
-                                        anchors.left: parent.left
-                                        anchors.right: searchButton.left
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        leftPadding: 5
-                                        rightPadding: 5
-                                        padding: 5
-                                    }
-
-                                    Button {
-                                            id: searchButton
-                                            width: 25
-                                            height: 25
-                                            anchors.verticalCenter: parent.verticalCenter
-                                            anchors.right: parent.right
-                                            anchors.rightMargin: 5
-                                            background: Rectangle {
-                                                            color: "transparent"
-                                                            border.color: "transparent"
-                                                        }
-
-                                            contentItem: Image {
-                                                source: "/home/sryn/Pictures/Project Pic src/search.png"
-                                                fillMode: Image.PreserveAspectFit
-                                                anchors.centerIn: parent
-                                             }
-
-                                            onClicked: {
-
-                                                console.log("Searched Text: ", searchField.text)
-                                                console.log("function call")        //function call
+                                anchors.right: parent.right
+                                anchors.rightMargin: 5
+                                background: Rectangle {
+                                                color: "transparent"
+                                                border.color: "transparent"
                                             }
-                                         }
-                                    }
+
+                                contentItem: Image {
+                                    source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/search.png"
+                                    fillMode: Image.PreserveAspectFit
+                                    anchors.centerIn: parent
+                                 }
+
+                                onClicked: {
+                                    //latitudelongitude.coordrectangle.latText.text = weatherForecast.get_latitude(searchField.text)
+                                    console.log(weatherForecast.getForecast(searchField.text))
+                                    var latitude = weatherForecast.get_latitude(searchField.text)
+                                    var longitude = weatherForecast.get_longitude(searchField.text)
+                                    console.log(latitude);
+                                    console.log(longitude);
                                 }
+                             }
+                        }
+                    }
         }
     }
 
@@ -223,7 +202,7 @@ ApplicationWindow {
 
 
                               Image {                                                          //drawer button inside drawer ko lagi
-                                  source: "/home/sryn/Pictures/Project Pic src/drawer.png"
+                                  source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/drawer.png"
                                   width: 37
                                   height: 37
                                   fillMode: Image.PreserveAspectFit
@@ -685,6 +664,7 @@ ApplicationWindow {
     }
     //-----------------------------------------------------LATITUDE/LONGITUDE-----------------------------------------------------------
     Item{
+        id: latitudelongitude;
         anchors.fill: parent
         anchors.margins: 20
 
@@ -699,6 +679,7 @@ ApplicationWindow {
             anchors.topMargin: 630
 
             Rectangle {
+                id: coordrectangle
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: 60
@@ -713,7 +694,11 @@ ApplicationWindow {
                     anchors.topMargin: 10
 
                     Text {
-                        text: "Latitude / Longitude"
+                        id: latText;
+                        text: "Latitude/Longitude"
+                        // var latitude = weatherForecast.get_latitude(searchField.text);
+                        // var longitude = weatheerForecast.get_longitude(searchField.text)
+                        // text: `latitude:${latitude}/longitude:${longitude}`;
                         font.pixelSize: 30
                         font.weight: Font.Bold
                         color: "#333333"
@@ -806,6 +791,4 @@ ApplicationWindow {
         }
 
     }
-
-
 }
