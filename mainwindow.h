@@ -7,7 +7,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
-
+#include <QScrollArea>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -22,9 +22,10 @@ public:
 
 private slots:
     void fetchresult();
-    void onCityResult(QNetworkReply *reply);
     void onAQIResult(QNetworkReply *reply);
-    QString getQualitativeName(int index);
+    void onCityResult(QNetworkReply *reply);
+
+    //QString getQualitativeName(int index);
 
 
 
@@ -38,6 +39,7 @@ private:
     QLabel *labelAQI;
 // QString getQualitativeName(int index);
     QString formatJsonString(const QString &jsonString);
+
 
 };
 
