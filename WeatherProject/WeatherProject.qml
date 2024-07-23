@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 
+
 ApplicationWindow {
     visible: true
      width: 800
@@ -418,7 +419,7 @@ ApplicationWindow {
                            }
                            Text {
                                id: description;
-                               text: "Partly Cloudy"
+                               text: `${weatherForecast.get_weather(weatherForecast.get_latitude("Kathmandu"), weatherForecast.get_longitude("Kathmandu"))}`;
                                font.pixelSize: 18
                                color: "black"
                            }
@@ -428,8 +429,8 @@ ApplicationWindow {
 
                        Image {
                            id: weatherIcon
-                           source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/cloudy.png";
-                           // source: "https://openweathermap.org/img/wn/10d@2x.png"
+                           // source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/cloudy.png";
+                           source: weatherForecast.get_icon(weatherForecast.get_latitude("Kathmandu"), weatherForecast.get_longitude("Kathmandu"));
                            fillMode: Image.PreserveAspectFit
                            Layout.preferredHeight: 90
                            Layout.preferredWidth: 90
@@ -437,7 +438,7 @@ ApplicationWindow {
 
                        Text {
                            id: temp;
-                           text: "25°C"
+                           text: `${weatherForecast.get_temperature(weatherForecast.get_latitude("Kathmandu"), weatherForecast.get_longitude("Kathmandu"))} °C`;
                            font.pixelSize: 48
                            color: "black"
                        }
@@ -774,7 +775,7 @@ ApplicationWindow {
 
                     Text {
                         id: latText;
-                        text: "Latitude / Longitude"
+                        text: `${weatherForecast.get_latitude("Kathmandu")} and ${weatherForecast.get_longitude("Kathmandu")}`
                         font.pixelSize: 30
                         font.weight: Font.Bold
                         color: "#333333"
