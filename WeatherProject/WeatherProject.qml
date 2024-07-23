@@ -132,6 +132,7 @@ ApplicationWindow {
 
 
                                 property string searchText:""
+
                                 Row {
                                     anchors.fill: parent
                                     spacing: 5
@@ -172,8 +173,11 @@ ApplicationWindow {
                                              }
 
                                             onClicked: {
-                                                console.log("Searched Text: ", searchField.text)
-                                                console.log("function call")        //function call
+                                                latitudelongitude.children[0].children[0].children[0].children[0].text = `${weatherForecast.get_latitude(searchField.text)} and ${weatherForecast.get_longitude(searchField.text)}`;
+                                                maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
+                                                maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(weatherForecast.get_latitude(searchField.text), weatherForecast.get_longitude(searchField.text));
+                                                maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(weatherForecast.get_latitude(searchField.text), weatherForecast.get_longitude(searchField.text))} °C`;
+                                                maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(weatherForecast.get_latitude(searchField.text), weatherForecast.get_longitude(searchField.text));
                                             }
                                          }
                                     }
@@ -371,6 +375,7 @@ ApplicationWindow {
     //--------------------------------------------------------MAIN CONTENT---------------------------------------------------------------
 
         Item {
+           id: maincontent;
            anchors.fill: parent
            anchors.margins: 20
 
@@ -388,10 +393,11 @@ ApplicationWindow {
 
                // Current Weather
                Rectangle {
+                   id: currentWeather;
                    Layout.columnSpan: 2
                    Layout.fillWidth: true
                    height: 150
-                   color: "white"
+                   color: boxColor1
                    opacity: 0.8
                    radius: 10
                    width: parent.width
@@ -404,12 +410,14 @@ ApplicationWindow {
                        Column {
                            Layout.fillHeight: true
                            Text {
+                               id: city;
                                text: "Kathmandu"
                                font.pixelSize: 30
                                font.weight: Font.Bold
                                color: "black"
                            }
                            Text {
+                               id: description;
                                text: "Partly Cloudy"
                                font.pixelSize: 18
                                color: "black"
@@ -418,19 +426,20 @@ ApplicationWindow {
 
                        Item { Layout.fillWidth: true }
 
-                       RowLayout {
-                           spacing: 20
-                           Image {
-                               source: "/home/sryn/Pictures/Project Pic src/cloudy.png"
-                               fillMode: Image.PreserveAspectFit
-                               Layout.preferredHeight: 90
-                               Layout.preferredWidth: 90
-                           }
-                           Text {
-                               text: "25°C"
-                               font.pixelSize: 48
-                               color: "black"
-                           }
+                       Image {
+                           id: weatherIcon
+                           source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/cloudy.png";
+                           // source: "https://openweathermap.org/img/wn/10d@2x.png"
+                           fillMode: Image.PreserveAspectFit
+                           Layout.preferredHeight: 90
+                           Layout.preferredWidth: 90
+                        }
+
+                       Text {
+                           id: temp;
+                           text: "25°C"
+                           font.pixelSize: 48
+                           color: "black"
                        }
                    }
                }
@@ -734,6 +743,7 @@ ApplicationWindow {
     }
     //-----------------------------------------------------LATITUDE/LONGITUDE-----------------------------------------------------------
     Item{
+        id: latitudelongitude;
         anchors.fill: parent
         anchors.margins: 20
 
@@ -748,6 +758,7 @@ ApplicationWindow {
             anchors.topMargin: 630
 
             Rectangle {
+                id: coordrectangle
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: 60
@@ -762,6 +773,7 @@ ApplicationWindow {
                     anchors.topMargin: 10
 
                     Text {
+                        id: latText;
                         text: "Latitude / Longitude"
                         font.pixelSize: 30
                         font.weight: Font.Bold

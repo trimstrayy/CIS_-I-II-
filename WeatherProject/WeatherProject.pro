@@ -10,15 +10,23 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
+    weather_forecast.cpp
 
 
 HEADERS += \
+    weather_forecast.h
 
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+INCLUDEPATH += C:/Coding/curl/include \
+               C:/Coding/software/Qt/6.7.2/msvc2019_arm64/include/QtPositioning \
+               C:/Coding/software/Qt/6.7.2/msvc2019_arm64/include/QtLocation
+
+LIBS += -LC:/Coding/curl/lib -lcurl
 
 DISTFILES += \
     Newtab.qml \
