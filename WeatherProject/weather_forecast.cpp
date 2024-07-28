@@ -39,6 +39,11 @@ QString WeatherForecast::getCity(QString city_name)
 
 
 //Fucntions
+QString WeatherForecast::get_date_hourly_data(QJsonArray forecast, int index)
+{
+    return "";
+}
+
 QString WeatherForecast::get_icon_hourly_data(QJsonArray forecast, int index)
 {
     QString icon;
@@ -85,8 +90,10 @@ void WeatherForecast::get_temperature_hourly(QString latitude, QString longitude
     for(int i = 0 ; i < index ; i++){
     QString temperature = "";
     QString icon = "";
+    QString dt;
     temperature = get_temperature_hourly_data(forecast, i);
     icon = get_icon_hourly_data(forecast, i);
+    dt = get_date_hourly_data(forecast, i);
     qDebug() << temperature << "\n";
     qDebug() << icon << "\n";
 

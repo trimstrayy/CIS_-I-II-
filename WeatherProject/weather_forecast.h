@@ -22,11 +22,11 @@ public:
     Q_INVOKABLE void get_temperature_hourly(QString latitude, QString longitude, int index);
     Q_INVOKABLE QString get_temperature_hourly_data(QJsonArray forecast, int index);
     Q_INVOKABLE QString get_icon_hourly_data(QJsonArray forecast, int index);
-
+    Q_INVOKABLE QString get_date_hourly_data(QJsonArray forecast, int index);
 signals:
     void temperatureHourlyData(const QString &temperature, int index);
     void iconhourlyData(const QString &icon, int index);
-
+    void datehourlyData(const QString &date, int index);
 
 // private:
 //     double m_temperature;
