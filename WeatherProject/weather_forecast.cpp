@@ -15,7 +15,9 @@ extern QString API_KEY = "01b70166b923c25c030d53acdc92e93d";
 extern QJsonParseError error;
 
 QByteArray response(char []);
-WeatherForecast::WeatherForecast(QObject *parent) : QObject(parent) {}
+WeatherForecast::WeatherForecast(QObject *parent) : QObject(parent) {
+
+}
 
 // Function to write curl data into a QByteArray
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
@@ -23,6 +25,10 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
     ((QByteArray*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
+
+
+//Main function
+// QString WeatherForecast::main(QString latitude, QString longitude)
 
 
 // Test
@@ -33,6 +39,63 @@ QString WeatherForecast::getCity(QString city_name)
 
 
 //Fucntions
+QString WeatherForecast::get_icon_hourly_data(QJsonArray forecast, int index)
+{
+    QString icon;
+    QJsonObject arr = forecast[index].toObject();
+    QJsonArray weather = arr["weather"].toArray();
+    QJsonObject weather_data = weather[0].toObject();
+    icon = weather_data["icon"].toString();
+    return icon;
+}
+
+
+QString WeatherForecast::get_temperature_hourly_data(QJsonArray forecast ,int index)
+{
+    double temperature;
+    QJsonObject arr = forecast[index].toObject();
+    QJsonObject main = arr["main"].toObject();
+    temperature = main["temp"].toDouble();
+    temperature -= 273;
+    QString result = QString::number(temperature, 'f', 1);
+    return result;
+}
+
+void WeatherForecast::get_temperature_hourly(QString latitude, QString longitude,int index)
+{
+    //Call hourly forecast data
+    std::string string_forecast_4Days_hr_url = "https://pro.openweathermap.org/data/2.5/forecast/hourly?lat="+latitude.toStdString()+"&lon="+longitude.toStdString()+"&appid="+API_KEY.toStdString();
+    char url[150];
+
+    //Converting std::string to char type
+    strcpy(url, string_forecast_4Days_hr_url.c_str());
+
+    //fetching data
+    QJsonDocument jsonDoc = response_data(response(url));
+
+    if (!jsonDoc.isObject()) {
+        qDebug() << "JSON is not an object.";
+    }
+
+    QJsonObject jsonObj = jsonDoc.object();
+
+    // QJsonArray forecast = jsonObj["list"].toArray();
+    QJsonArray forecast = jsonObj["list"].toArray();
+
+    for(int i = 0 ; i < index ; i++){
+    QString temperature = "";
+    QString icon = "";
+    temperature = get_temperature_hourly_data(forecast, i);
+    icon = get_icon_hourly_data(forecast, i);
+    qDebug() << temperature << "\n";
+    qDebug() << icon << "\n";
+
+    emit temperatureHourlyData(temperature, i);
+    emit iconhourlyData(icon, index);
+    }
+}
+
+
 QString WeatherForecast::get_icon(QString latitude, QString longitude)
 {
     // Current Weather API CALL
@@ -61,6 +124,7 @@ QString WeatherForecast::get_icon(QString latitude, QString longitude)
 
     // Extracting specific information:
     QString icon = weather_data["icon"].toString();
+    qDebug() << icon << "\n";
 
     int id = weather_data["id"].toInt();
     QString id_s;
@@ -175,6 +239,7 @@ QString WeatherForecast::get_weather(QString latitude, QString longitude)
 QString WeatherForecast::get_longitude(QString city_name)
 {
     // Initialize libcurl
+    qDebug() << city_name;
     std::string string_url = "http://api.openweathermap.org/geo/1.0/direct?q="+city_name.toStdString()+"&limit=5&appid="+API_KEY.toStdString();
     char url[150];
 

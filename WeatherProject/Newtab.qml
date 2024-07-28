@@ -15,7 +15,7 @@ ApplicationWindow {
 
 
     AnimatedImage {
-        source: "/home/sryn/Pictures/Project Pic src/weathervid.gif"
+        source: "photos/weathervid.gif"
         anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
         fillMode: Image.PreserveAspectCrop
     }

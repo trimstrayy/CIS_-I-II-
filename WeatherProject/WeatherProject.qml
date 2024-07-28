@@ -5,19 +5,24 @@ import QtQuick.Window 2.15
 
 
 ApplicationWindow {
+    id: main
     visible: true
      width: 800
     height: 600
     title: "Weather Forecast"
    // property int activeIndex: 1                  //TO INDICATE WHERE WE ARE VIEWING
 
-
+    property real latitude: weatherForecast.get_latitude("Kathmandu")
+    property real longitude: weatherForecast.get_longitude("Kathmandu")
+    property real icon_index: 0
+    // property real temperature: weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
+    // property var temperatures: weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
 
 
 
 
     AnimatedImage {
-        source: "/home/sryn/Pictures/Project Pic src/weathervid.gif"
+        source: "photos/bg1.jpg"
         anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
         fillMode: Image.PreserveAspectCrop
     }
@@ -44,7 +49,7 @@ ApplicationWindow {
                 radius: 5
 
                 Image {
-                    source: "/home/sryn/Pictures/Project Pic src/drawer.png"  // Drawer icon
+                    source: "photos//drawer.png"  // Drawer icon
                     width: 37
                     height: 37
                     fillMode: Image.PreserveAspectFit
@@ -168,17 +173,25 @@ ApplicationWindow {
                                                         }
 
                                             contentItem: Image {
-                                                source: "/home/sryn/Pictures/Project Pic src/search.png"
+                                                source: "photos/search.png"
                                                 fillMode: Image.PreserveAspectFit
                                                 anchors.centerIn: parent
                                              }
 
                                             onClicked: {
-                                                latitudelongitude.children[0].children[0].children[0].children[0].text = `${weatherForecast.get_latitude(searchField.text)} and ${weatherForecast.get_longitude(searchField.text)}`;
+                                                var latitude = weatherForecast.get_latitude(searchField.text);
+                                                var longitude = weatherForecast.get_longitude(searchField.text);
+                                                latitudelongitude.children[0].children[0].children[0].children[0].text = `${latitude} and ${longitude}`;
                                                 maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
-                                                maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(weatherForecast.get_latitude(searchField.text), weatherForecast.get_longitude(searchField.text));
-                                                maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(weatherForecast.get_latitude(searchField.text), weatherForecast.get_longitude(searchField.text))} °C`;
-                                                maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(weatherForecast.get_latitude(searchField.text), weatherForecast.get_longitude(searchField.text));
+                                                maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(latitude, longitude);
+                                                maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(latitude, longitude)} °C`;
+                                                maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(latitude, longitude);
+                                                //
+
+                                                // console.log(maincontent.children[0].children[1].children[0].children[1].children[0].children[0].children[2])
+                                                weatherForecast.get_temperature_hourly(latitude, longitude, 11);
+                                                // var temp = weatherForecast.get_temperature_hourly_data(10);
+                                                // console.log(temp);
                                             }
                                          }
                                     }
@@ -241,7 +254,7 @@ ApplicationWindow {
                             }
 
                 contentItem: Image {
-                    source: "/home/sryn/Pictures/Project Pic src/drawer.png"                           //------------------------- DRAWER ICON --------------------------
+                    source: "photos/drawer.png"                           //------------------------- DRAWER ICON --------------------------
                     fillMode: Image.PreserveAspectFit
                     anchors.centerIn: parent
                  }
@@ -284,7 +297,7 @@ ApplicationWindow {
                         }
 
             contentItem: Image {
-                source: "/home/sryn/Pictures/Project Pic src/home.png"                        //--------------------------HOME ICON -------------------------------
+                source: "photos/home.png"                        //--------------------------HOME ICON -------------------------------
                 fillMode: Image.PreserveAspectFit
                 anchors.centerIn: parent
 
@@ -315,7 +328,7 @@ ApplicationWindow {
                         }
 
             contentItem: Image {
-                source: "/home/sryn/Pictures/Project Pic src/mapicon.png"                        //--------------------------MAP ICON -------------------------------
+                source: "photos/mapicon.png"                        //--------------------------MAP ICON -------------------------------
                 fillMode: Image.PreserveAspectFit
                 anchors.centerIn: parent
 
@@ -403,6 +416,8 @@ ApplicationWindow {
                    radius: 10
                    width: parent.width
 
+
+
                    RowLayout {
                        anchors.fill: parent
                        anchors.margins: 20
@@ -419,7 +434,12 @@ ApplicationWindow {
                            }
                            Text {
                                id: description;
-                               text: `${weatherForecast.get_weather(weatherForecast.get_latitude("Kathmandu"), weatherForecast.get_longitude("Kathmandu"))}`;
+                               text:{
+                                   var latitude = main.latitude;
+                                   var longitude = main.longitude;
+                                   `${weatherForecast.get_weather(latitude, longitude)}`;
+                               }
+
                                font.pixelSize: 18
                                color: "black"
                            }
@@ -429,8 +449,8 @@ ApplicationWindow {
 
                        Image {
                            id: weatherIcon
-                           // source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/cloudy.png";
-                           source: weatherForecast.get_icon(weatherForecast.get_latitude("Kathmandu"), weatherForecast.get_longitude("Kathmandu"));
+                           source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/cloudy.png";
+                           // source: weatherForecast.get_icon(weatherForecast.get_latitude("Kathmandu"), weatherForecast.get_longitude("Kathmandu"));
                            fillMode: Image.PreserveAspectFit
                            Layout.preferredHeight: 90
                            Layout.preferredWidth: 90
@@ -438,7 +458,10 @@ ApplicationWindow {
 
                        Text {
                            id: temp;
-                           text: `${weatherForecast.get_temperature(weatherForecast.get_latitude("Kathmandu"), weatherForecast.get_longitude("Kathmandu"))} °C`;
+                           text: {
+                               var latitude = main.latitude;
+                               var longitude = main.longitude;
+                               `${weatherForecast.get_temperature(latitude, longitude)} °C`;}
                            font.pixelSize: 48
                            color: "black"
                        }
@@ -446,81 +469,83 @@ ApplicationWindow {
                }
 
 
-               // Weather Conditions
-               Rectangle {
-                   Layout.fillWidth: true
-                   height: 200
-                   color: "white"//boxColor2
-                   opacity: 0.8
-                   radius: 10
+               // // Weather Conditions
+               // Rectangle {
+               //     Layout.fillWidth: true
+               //     height: 200
+               //     color: "white"//boxColor2
+               //     opacity: 0.8
+               //     radius: 10
 
-                   ColumnLayout {
-                       anchors.fill: parent
-                       anchors.margins: 10
-                       spacing: 10
+               //     ColumnLayout {
+               //         anchors.fill: parent
+               //         anchors.margins: 10
+               //         spacing: 10
 
-                       Text {
-                           text: "Weather Conditions"
-                           font.pixelSize: 16
-                           font.weight: Font.Bold
-                           color: "black"
-                       }
+               //         Text {
+               //             text: "Weather Conditions"
+               //             font.pixelSize: 16
+               //             font.weight: Font.Bold
+               //             color: "black"
+               //         }
 
-                       RowLayout {
-                           spacing: 20
+               //         RowLayout {
+               //             spacing: 20
 
-                           Column {
-                               Text {
-                                   text: "☁️"
-                                   font.pixelSize: 40
-                                   anchors.horizontalCenter: parent.horizontalCenter
-                               }
-                               Text {
-                                   text: "Cloudy"
-                                   color: "black"
-                                   anchors.horizontalCenter: parent.horizontalCenter
-                               }
-                           }
+               //             Column {
+               //                 Text {
+               //                     text: "☁️"
+               //                     font.pixelSize: 40
+               //                     anchors.horizontalCenter: parent.horizontalCenter
+               //                 }
+               //                 Text {
+               //                     text: "Cloudy"
+               //                     color: "black"
+               //                     anchors.horizontalCenter: parent.horizontalCenter
+               //                 }
+               //             }
 
-                           Column {
-                               Text {
-                                   text: "🌧️"
-                                   font.pixelSize: 40
-                                   anchors.horizontalCenter: parent.horizontalCenter
-                               }
-                               Text {
-                                   text: "Rainy"
-                                   color: "black"
-                                   anchors.horizontalCenter: parent.horizontalCenter
-                               }
-                           }
+               //             Column {
+               //                 Text {
+               //                     text: "🌧️"
+               //                     font.pixelSize: 40
+               //                     anchors.horizontalCenter: parent.horizontalCenter
+               //                 }
+               //                 Text {
+               //                     text: "Rainy"
+               //                     color: "black"
+               //                     anchors.horizontalCenter: parent.horizontalCenter
+               //                 }
+               //             }
 
-                           Column {
-                               // Image {
-                               //                                         source:"/home/sryn/Pictures/Project Pic src/cloudy.png"
-                               //                                         width: 30
-                               //                                         height: 30
-                               //                                         anchors.horizontalCenter: parent.horizontalCenter
-                               //                                     }
-                               Text {
-                                text: "☀️"
-                                font.pixelSize: 40
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                }
-                               Text {
-                                   text: "Sunny"
-                                   color: "black"
-                                   anchors.horizontalCenter: parent.horizontalCenter
-                               }
-                           }
-                       }
-                   }
-               }
+               //             Column {
+               //                 // Image {
+               //                 //                                         source:"/home/sryn/Pictures/Project Pic src/cloudy.png"
+               //                 //                                         width: 30
+               //                 //                                         height: 30
+               //                 //                                         anchors.horizontalCenter: parent.horizontalCenter
+               //                 //                                     }
+               //                 Text {
+               //                  text: "☀️"
+               //                  font.pixelSize: 40
+               //                  anchors.horizontalCenter: parent.horizontalCenter
+               //                  }
+               //                 Text {
+               //                     text: "Sunny"
+               //                     color: "black"
+               //                     anchors.horizontalCenter: parent.horizontalCenter
+               //                 }
+               //             }
+               //         }
+               //     }
+               // }
 
                // Hourly Forecast
                Rectangle {
+                   id:hourlyForecast
                    Layout.fillWidth: true
-                   height: 200
+                   height: 250
+                   width: parent.width
                    color: "white"//boxColor3
                    opacity: 0.8
                    radius: 10
@@ -539,10 +564,11 @@ ApplicationWindow {
                        RowLayout {
                            spacing: 10
                            Repeater {
-                               model: 6
+                               id: hourlyreapeter
+                               model: 10
                                Rectangle {
-                                   width: 50
-                                   height: 100
+                                   width: 55
+                                   height: 120
                                    color: "#34495e"
                                    radius: 5
                                    Column {
@@ -550,21 +576,40 @@ ApplicationWindow {
                                        spacing: 5
                                        Text {
                                            text: (model.index + 1) + "h"
+                                           font.pixelSize: 15
                                            color: "black"
                                            anchors.horizontalCenter: parent.horizontalCenter
                                        }
-                                       Text {
-                                           text: model.index % 2 ? "☁️" : "🌧️"
-                                           font.pixelSize: 24
+                                       // Text {
+                                       //     text: model.index % 2 ? "☁️" : "🌧️"
+                                       //     font.pixelSize: 24
+                                       //     anchors.horizontalCenter: parent.horizontalCenter
+                                       // }
+                                       Image{
+                                           source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/cloudy.png";
+                                           fillMode: Image.PreserveAspectFit
                                            anchors.horizontalCenter: parent.horizontalCenter
-                                       }
+                                           width: 45
+                                           height: 45
+                                        }
                                        Text {
-                                           text: "23°"
+                                           id: tempText
+                                           text: "";
+                                           font.pixelSize: 15
+                                           // text: "23 C"
                                            color: "black"
                                            anchors.horizontalCenter: parent.horizontalCenter
                                        }
                                    }
                                }
+
+                               // Connections {
+                               //     target: weatherForecast
+                               //     onTemperatureHourlyData: {
+                               //         // hourlyForecast.children[0].children[0].children[0].children[0].children[0].children[3].text = "Temperature: " + temperature + " °C"
+                               //         tempText.text = "Temperature: " + temperature + " °C";
+                               //     }
+                               // }
                            }
                        }
                    }
@@ -582,7 +627,7 @@ ApplicationWindow {
             anchors.top: parent.top
             width: parent.width * 0.4
             columns: 2
-            rowSpacing: 200
+            rowSpacing: 220
             columnSpacing: 20
             anchors.leftMargin: 100
             anchors.topMargin: 125
@@ -607,7 +652,7 @@ ApplicationWindow {
             Rectangle {
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
-                height: 300
+                height: 250
                 color: "white"//boxColor4
                 opacity: 0.8
                 radius: 10
@@ -689,8 +734,17 @@ ApplicationWindow {
                 Item {
                     anchors.fill: parent
 
+                    // Image {
+                    //     // source: "photos/map.png"
+                    //     source: "file:///C:/Coding/c++/New%20folder/vector-world-map.svg"
+                    //     // source: "http://maps.openweathermap.org/maps/2.0/weather/TA2/0/0/0?appid=01b70166b923c25c030d53acdc92e93d&fill_bound=true&opacity=0.6&0:E1C86400; 0.1:C8963200; 0.2:9696AA00; 0.5:7878BE00; 1:6E6ECD4C; 10:5050E1B2; 140:1414FFE5"
+                    //     anchors.fill: parent
+                    //     fillMode: Image.PreserveAspectCrop
+                    // }
+
                     Image {
-                        source: "/home/sryn/Pictures/Project Pic src/map.png"
+                        source: "photos/map.png"
+                        // source: "http://maps.openweathermap.org/maps/2.0/weather/TA2/0/0/0?appid=01b70166b923c25c030d53acdc92e93d"
                         anchors.fill: parent
                         fillMode: Image.PreserveAspectCrop
                     }
@@ -868,6 +922,40 @@ ApplicationWindow {
         }
 
     }
+    Connections {
+       target: weatherForecast
+       function onTemperatureHourlyData(temperature, index) {
+           console.log("Received temperature:", temperature, "for index:", index);
+           var item = hourlyreapeter.itemAt(index);
+           if(item) {
+               item.children[0].children[2].text = temperature + "°C";
+           }
+       }
+
+      function oniconhourlyData(icon, index)
+      {
+          console.log("Recieved icon::", icon, "for index:", main.icon_index);
+          var item = hourlyreapeter.itemAt(main.icon_index)
+
+          if(item)
+          {
+            item.children[0].children[1].source = "https://openweathermap.org/img/wn/" + icon + "@2x.png";
+          }
+
+          main.icon_index++;
+          if(main.icon_index > 10)
+          {
+              main.icon_index = 0;
+          }
+
+      }
+   }
+
+    // Component.onCompleted: {
+    //     for (var i = 0; i < 11; i++) {
+    //                 weatherForecast.get_temperature_hourly(main.latitude, main.longitude);
+    //             }
+    // }
 
 
 }
