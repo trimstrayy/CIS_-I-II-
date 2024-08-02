@@ -7,7 +7,7 @@ import QtQuick.Window 2.15
 ApplicationWindow {
     id: main
     visible: true
-     width: 800
+    width: 800
     height: 600
     title: "Weather Forecast"
    // property int activeIndex: 1                  //TO INDICATE WHERE WE ARE VIEWING
@@ -15,6 +15,9 @@ ApplicationWindow {
     property real latitude: weatherForecast.get_latitude("Kathmandu")
     property real longitude: weatherForecast.get_longitude("Kathmandu")
     property real icon_index: 0
+    property var temperatures: [] // Array to store temperatures
+    property var icons: [] // Array to store weather icons
+    property real humiduty: 0
     // property real temperature: weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
     // property var temperatures: weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
 
@@ -22,7 +25,13 @@ ApplicationWindow {
 
 
     AnimatedImage {
-        source: "photos/bg1.jpg"
+        id: animatedImage
+        // source: "photos/weathervid.gif"
+        // source: "photos/clearnepal.jpg"
+        source: "photos/fug.jpg"
+        // source: "photos/partlyclouds.jpg"
+        // source: "photos/thunderbg.jpg"
+        // source: "photos/rainybg3.jpg"
         anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
         fillMode: Image.PreserveAspectCrop
     }
@@ -181,15 +190,16 @@ ApplicationWindow {
                                             onClicked: {
                                                 var latitude = weatherForecast.get_latitude(searchField.text);
                                                 var longitude = weatherForecast.get_longitude(searchField.text);
-                                                latitudelongitude.children[0].children[0].children[0].children[0].text = `${latitude} and ${longitude}`;
+                                                latitudelongitude.children[0].children[0].children[0].children[1].text = `${latitude} and ${longitude}`;
                                                 maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
                                                 maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(latitude, longitude);
                                                 maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(latitude, longitude)} °C`;
                                                 maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(latitude, longitude);
-                                                //
+
 
                                                 // console.log(maincontent.children[0].children[1].children[0].children[1].children[0].children[0].children[2])
                                                 weatherForecast.get_temperature_hourly(latitude, longitude, 11);
+                                                weatherForecast.get_current_weather(latitude,longitude);
                                                 // var temp = weatherForecast.get_temperature_hourly_data(10);
                                                 // console.log(temp);
                                             }
@@ -449,11 +459,11 @@ ApplicationWindow {
 
                        Image {
                            id: weatherIcon
-                           source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/cloudy.png";
-                           // source: weatherForecast.get_icon(weatherForecast.get_latitude("Kathmandu"), weatherForecast.get_longitude("Kathmandu"));
+                            // source: "photos/sunny.png"
+                           source: weatherForecast.get_icon(main.latitude, main.longitude);
                            fillMode: Image.PreserveAspectFit
-                           Layout.preferredHeight: 90
-                           Layout.preferredWidth: 90
+                           Layout.preferredHeight: 65
+                           Layout.preferredWidth: 65
                         }
 
                        Text {
@@ -580,21 +590,16 @@ ApplicationWindow {
                                            color: "black"
                                            anchors.horizontalCenter: parent.horizontalCenter
                                        }
-                                       // Text {
-                                       //     text: model.index % 2 ? "☁️" : "🌧️"
-                                       //     font.pixelSize: 24
-                                       //     anchors.horizontalCenter: parent.horizontalCenter
-                                       // }
                                        Image{
                                            source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/cloudy.png";
                                            fillMode: Image.PreserveAspectFit
                                            anchors.horizontalCenter: parent.horizontalCenter
-                                           width: 45
-                                           height: 45
+                                           width: 50
+                                           height: 50
                                         }
                                        Text {
                                            id: tempText
-                                           text: "";
+                                           text: temperatures[model.index] !== undefined ? temperatures[model.index] + " °C" : ""
                                            font.pixelSize: 15
                                            // text: "23 C"
                                            color: "black"
@@ -648,61 +653,61 @@ ApplicationWindow {
                 // ... (existing code for hourly forecast)
             }
 
-            // New box for Humidity, Air Pressure, and Rainometer
             Rectangle {
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: 250
-                color: "white"//boxColor4
+                color: boxColor1  // Light gray background
                 opacity: 0.8
                 radius: 10
-                anchors.topMargin: parent.topMargin
+
                 ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: 20
-                    spacing: 10
-                    anchors.topMargin: -20
+                    spacing: 2
 
                     Text {
                         text: "Weather Metrics"
-                        font.pixelSize: 30
+                        font.pixelSize: 28
                         font.weight: Font.Bold
                         color: "black"
                     }
 
-                    RowLayout {
-                                Layout.fillWidth: true
-                                spacing: 160
+                    GridLayout {
+                        id: weatherMetrics
+                        columns: 2  // Display metrics in two columns
+                        rowSpacing: 20
+                        columnSpacing: 75
 
+                        Repeater {
+                            id: weatherMatrix
+                            model: ListModel {
+                                ListElement { label: "Humidity :"; value: "78.0"; icon: "photos/humidity.png" }
+                                ListElement { label: "Clouds :"; value: "40.0"; icon: "photos/cloudiness.png" }
+                                ListElement { label: "Pressure :"; value: "1015"; icon: "photos/pressure.png" }
+                                ListElement { label: "UV Index :"; value: "5.2"; icon: "photos/uv-index.png" }
+                                ListElement { label: "Wind :"; value: "5.2 m/s"; icon: "photos/wind.png" }
+                                ListElement { label: "Rain :"; value: "0.5 mm"; icon: "photos/rainicon2.png" }
+                            }
 
-                                Repeater {
-                                   // anchors.topMargin: -30
+                            delegate: RowLayout {
+                                spacing: 10
 
-                                    model: [
-                                        {label: "Humidity", value: "65%"},
-                                        {label: "Air Pressure", value: "1013 hPa"},
-                                        {label: "Rainometer", value: "2 mm"}
-                                    ]
-
-                                    delegate: ColumnLayout {
-                                        spacing: 5
-
-                                        Text {
-                                            text: modelData.label
-                                            font.pixelSize: 20
-                                            color: "black"
-                                            Layout.alignment: Qt.AlignLeft
-                                        }
-
-                                        Text {
-                                            text: modelData.value
-                                            font.pixelSize: 18
-                                            font.weight: Font.Medium
-                                            color: "#34495e"
-                                            Layout.alignment: Qt.AlignLeft
-                                        }
-                                    }
+                                Image {
+                                    source: model.icon
+                                    sourceSize.width: 24
+                                    sourceSize.height: 24
+                                    Layout.alignment: Qt.AlignVCenter
                                 }
+
+                                Text {
+                                    text: model.label + " " + model.value
+                                    font.pixelSize: 18
+                                    color: "black"
+                                    Layout.alignment: Qt.AlignVCenter
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -728,7 +733,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 height: 500
                 color: "white"//boxColor4
-                opacity: 0.8
+                opacity: 0.7
                 radius: 10
 
                 Item {
@@ -817,23 +822,33 @@ ApplicationWindow {
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: 60
-                color: "#34495e"
-                //opacity: 0.8
+                color: "#E0E0E0"
+                opacity: 0.8
                 radius: 10
                 anchors.topMargin: parent.topMargin
-                ColumnLayout {
+                RowLayout {
                     anchors.fill: parent
                     anchors.margins: 20
                     spacing: 10
                     anchors.topMargin: 10
 
+                    Image {
+                            source: "photos/maps-and-flags.png"
+                            sourceSize.width: 24
+                            sourceSize.height: 24
+                            Layout.alignment: Qt.AlignVCenter
+                        }
+
                     Text {
                         id: latText;
-                        text: `${weatherForecast.get_latitude("Kathmandu")} and ${weatherForecast.get_longitude("Kathmandu")}`
-                        font.pixelSize: 30
+                        text: `${weatherForecast.get_latitude("Kathmandu")} | ${weatherForecast.get_longitude("Kathmandu")}`
+                        font.pixelSize: 28
                         font.weight: Font.Bold
                         color: "#333333"
+                        Layout.alignment: Qt.AlignVCenter
                     }
+
+                    Item { Layout.fillWidth: true }
 
                 }
             }
@@ -859,8 +874,8 @@ ApplicationWindow {
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: 60
-                color:"#34495e"
-                //opacity: 0.8
+                color: "#E0E0E0"
+                opacity: 0.8
                 radius: 10
                 anchors.topMargin: parent.topMargin
                 ColumnLayout {
@@ -900,8 +915,8 @@ ApplicationWindow {
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: 60
-                color: "#34495e"
-               // opacity: 0.8
+                color: "#E0E0E0"
+                opacity: 0.8
                 radius: 10
                 anchors.topMargin: parent.topMargin
                 ColumnLayout {
@@ -949,13 +964,63 @@ ApplicationWindow {
           }
 
       }
+
+      function onhumidityData(humidity)
+      {
+          for (var i = 0; i < weatherMatrix.model.count; i++) {
+             if (weatherMatrix.model.get(i).label === "Humidity :") {
+                 weatherMatrix.model.setProperty(i, "value", `${humidity}%`);
+                 break;
+             }
+         }
+      }
+
+      function oncloudinessData(clouds)
+      {
+          for (var i = 0; i < weatherMatrix.model.count; i++) {
+             if (weatherMatrix.model.get(i).label === "Clouds :") {
+                 weatherMatrix.model.setProperty(i, "value", `${clouds}%`);
+                 break;
+             }
+         }
+      }
+
+      function onpressureData(pressure)
+      {
+          for (var i = 0; i < weatherMatrix.model.count; i++) {
+             if (weatherMatrix.model.get(i).label === "Pressure :") {
+                 weatherMatrix.model.setProperty(i, "value", `${pressure} hPa`);
+                 break;
+             }
+         }
+      }
+
+      function onwindData(wind)
+      {
+          for (var i = 0; i < weatherMatrix.model.count; i++) {
+             if (weatherMatrix.model.get(i).label === "Wind :") {
+                 weatherMatrix.model.setProperty(i, "value", `${wind} m/s`);
+                 break;
+             }
+         }
+      }
+
+      function onrainData(rain)
+      {
+          for (var i = 0; i < weatherMatrix.model.count; i++) {
+             if (weatherMatrix.model.get(i).label === "Rain :") {
+                 weatherMatrix.model.setProperty(i, "value", `${rain} mm`);
+                 break;
+             }
+         }
+      }
+
    }
 
-    // Component.onCompleted: {
-    //     for (var i = 0; i < 11; i++) {
-    //                 weatherForecast.get_temperature_hourly(main.latitude, main.longitude);
-    //             }
-    // }
+    Component.onCompleted: {
+                    weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
+                    weatherForecsat.get_current_weather(main.latitude,main.longitude);
+    }
 
 
 }

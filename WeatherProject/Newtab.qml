@@ -10,8 +10,8 @@ ApplicationWindow {
     height: 800
     title: "Weather Map"
 
-    property real currentLatitude: 27.7172
-    property real currentLongitude: 85.3240
+    property real currentLatitude: weatherForecast.get_latitude("Kathmandu")
+    property real currentLongitude: weatherForecast.get_longitude("Kathmandu")
 
     ColumnLayout {
         anchors.fill: parent
@@ -85,7 +85,7 @@ ApplicationWindow {
 
                     sourceItem: Image {
                         id: markerImage
-                        source: "path_to_your_marker_image.png" // Replace with your marker image
+                        source: "photos/mapicon.png" // Replace with your marker image
                         width: 40
                         height: 40
                     }

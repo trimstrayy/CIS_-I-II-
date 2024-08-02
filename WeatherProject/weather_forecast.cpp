@@ -34,7 +34,101 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
 // Test
 QString WeatherForecast::getCity(QString city_name)
 {
+    store_city_name = city_name;
     return city_name;
+}
+
+
+QString WeatherForecast::get_rain_data(QJsonObject jsonObj)
+{
+    QJsonObject rain = jsonObj["rain"].toObject();
+    double h = rain["1h"].toDouble();
+    QString result = QString::number(h, 'f', 2);
+    return result;
+}
+
+
+QString WeatherForecast::get_wind_data(QJsonObject jsonObj)
+{
+    QJsonObject wind = jsonObj["wind"].toObject();
+    double speed = wind["speed"].toDouble();
+    QString result = QString::number(speed, 'f', 2);
+    return result;
+}
+
+
+QString WeatherForecast::get_pressure_data(QJsonObject jsonObj)
+{
+    QString result;
+    QJsonObject main = jsonObj["main"].toObject();
+    double humidity = main["humidity"].toDouble();
+    result = QString::number(humidity, 'f', 1);
+    return result;
+}
+
+
+QString WeatherForecast::get_cloudiness_data(QJsonObject jsonObj)
+{
+    QJsonObject clouds = jsonObj["clouds"].toObject();
+    double all = clouds["all"].toDouble();
+    QString result = QString::number(all, 'f', 1);
+    return result;
+}
+
+
+QString WeatherForecast::get_humidity_data(QJsonObject jsonObj)
+{
+    QString result;
+    QJsonObject main = jsonObj["main"].toObject();
+    double humidity = main["humidity"].toDouble();
+    result = QString::number(humidity, 'f', 1);
+    return result;
+}
+
+
+void WeatherForecast::get_current_weather(QString latitude, QString longitude)
+{
+    // Current Weather API CALL
+    std::string string_weather_url = "https://api.openweathermap.org/data/2.5/weather?lat="+latitude.toStdString()+"&lon="+longitude.toStdString()+"&appid="+API_KEY.toStdString();
+    char url[150];
+
+    // Converting std::string to char type
+    strcpy(url, string_weather_url.c_str());
+
+    //fetching data
+    QJsonDocument jsonDoc = response_data(response(url));
+
+    QString result;
+
+    if (!jsonDoc.isObject()) {
+        qDebug() << "JSON is not an object.";
+        return;
+    }
+
+    QJsonObject jsonObj = jsonDoc.object();
+    QString humidity = "";
+    QString cloudiness = "";
+    QString pressure = "";
+    QString wind = "";
+    QString uv_index = "";
+    QString rain = "";
+    humidity = get_humidity_data(jsonObj);
+    qDebug() << humidity;
+    cloudiness = get_cloudiness_data(jsonObj);
+    qDebug() << cloudiness;
+    pressure = get_pressure_data(jsonObj);
+    qDebug() << pressure;
+    wind = get_wind_data(jsonObj);
+    qDebug() << wind;
+    rain = get_rain_data(jsonObj);
+    qDebug() << rain;
+
+    emit humidityData(humidity);
+    emit cloudinessData(cloudiness);
+    emit pressureData(pressure);
+    emit windData(wind);
+    emit rainData(rain);
+
 }
 
 
