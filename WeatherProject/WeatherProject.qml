@@ -1019,7 +1019,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
                     weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
-                    weatherForecsat.get_current_weather(main.latitude,main.longitude);
+                    weatherForecast.get_current_weather(main.latitude,main.longitude);
     }
 
 
