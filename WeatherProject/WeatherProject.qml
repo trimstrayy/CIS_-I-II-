@@ -685,7 +685,7 @@ ApplicationWindow {
                                 ListElement { label: "Humidity :"; value: "78.0"; icon: "photos/humidity.png" }
                                 ListElement { label: "Clouds :"; value: "40.0"; icon: "photos/cloudiness.png" }
                                 ListElement { label: "Pressure :"; value: "1015"; icon: "photos/pressure.png" }
-                                ListElement { label: "UV Index :"; value: "5.2"; icon: "photos/uv-index.png" }
+                                ListElement { label: "Visibility :"; value: "5.2"; icon: "photos/visibility.png" }
                                 ListElement { label: "Wind :"; value: "5.2 m/s"; icon: "photos/wind.png" }
                                 ListElement { label: "Rain :"; value: "0.5 mm"; icon: "photos/rainicon2.png" }
                             }
@@ -1010,6 +1010,16 @@ ApplicationWindow {
           for (var i = 0; i < weatherMatrix.model.count; i++) {
              if (weatherMatrix.model.get(i).label === "Rain :") {
                  weatherMatrix.model.setProperty(i, "value", `${rain} mm`);
+                 break;
+             }
+         }
+      }
+
+      function onvisibilityData(visibility)
+      {
+          for (var i = 0; i < weatherMatrix.model.count; i++) {
+             if (weatherMatrix.model.get(i).label === "Visibility :") {
+                 weatherMatrix.model.setProperty(i, "value", `${visibility} km`);
                  break;
              }
          }

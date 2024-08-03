@@ -39,6 +39,15 @@ QString WeatherForecast::getCity(QString city_name)
 }
 
 
+QString WeatherForecast::get_visibility_data(QJsonObject jsonObj)
+{
+    double visibility = jsonObj["visibility"].toDouble();
+    visibility /= 1000;
+    QString result = QString::number(visibility, 'f', 2);
+    return result;
+}
+
+
 QString WeatherForecast::get_rain_data(QJsonObject jsonObj)
 {
     QJsonObject rain = jsonObj["rain"].toObject();
@@ -110,7 +119,7 @@ void WeatherForecast::get_current_weather(QString latitude, QString longitude)
     QString cloudiness = "";
     QString pressure = "";
     QString wind = "";
-    QString uv_index = "";
+    QString visibility = "";
     QString rain = "";
     humidity = get_humidity_data(jsonObj);
     qDebug() << humidity;
@@ -122,12 +131,15 @@ void WeatherForecast::get_current_weather(QString latitude, QString longitude)
     qDebug() << wind;
     rain = get_rain_data(jsonObj);
     qDebug() << rain;
+    visibility = get_visibility_data(jsonObj);
+    qDebug() << visibility;
 
     emit humidityData(humidity);
     emit cloudinessData(cloudiness);
     emit pressureData(pressure);
     emit windData(wind);
     emit rainData(rain);
+    emit visibilityData(visibility);
 
 }
 

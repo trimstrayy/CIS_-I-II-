@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE QString get_pressure_data(QJsonObject jsonObj);
     Q_INVOKABLE QString get_wind_data(QJsonObject jsonObj);
     Q_INVOKABLE QString get_rain_data(QJsonObject jsonObj);
+    Q_INVOKABLE QString get_visibility_data(QJsonObject jsonObj);
     Q_INVOKABLE void get_temperature_hourly(QString latitude, QString longitude, int index);
     Q_INVOKABLE QString get_temperature_hourly_data(QJsonArray forecast, int index);
     Q_INVOKABLE QString get_icon_hourly_data(QJsonArray forecast, int index);
@@ -40,6 +41,7 @@ signals:
     void pressureData(const QString pressure);
     void windData(const QString wind);
     void rainData(const QString rain);
+    void visibilityData(const QString rain);
 
 // private:
 //     double m_temperature;
