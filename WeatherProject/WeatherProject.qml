@@ -27,8 +27,8 @@ ApplicationWindow {
     AnimatedImage {
         id: animatedImage
         // source: "photos/weathervid.gif"
-        // source: "photos/clearnepal.jpg"
-        source: "photos/fug.jpg"
+        source: "photos/clearnepal.jpg"
+        // source: "photos/fug.jpg"
         // source: "photos/partlyclouds.jpg"
         // source: "photos/thunderbg.jpg"
         // source: "photos/rainybg3.jpg"

@@ -453,7 +453,7 @@ QByteArray response(char url[]) //Fetching the API
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseData);
 
         // Provide a CA certificate bundle
-        curl_easy_setopt(curl, CURLOPT_CAINFO, "C:/Coding/c++/cacert.pem");
+        curl_easy_setopt(curl, CURLOPT_CAINFO, "../../carcet/cacert.pem");
 
         res = curl_easy_perform(curl);
         if(res != CURLE_OK) // error checking
