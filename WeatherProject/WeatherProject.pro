@@ -22,11 +22,11 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-INCLUDEPATH += C:/Coding/curl/include \
+INCLUDEPATH += ../../curl/include \
                C:/Coding/software/Qt/6.7.2/msvc2019_arm64/include/QtPositioning \
                C:/Coding/software/Qt/6.7.2/msvc2019_arm64/include/QtLocation
 
-LIBS += -LC:/Coding/curl/lib -lcurl
+LIBS += -L../../curl/lib -lcurl
 
 DISTFILES += \
     Newtab.qml \
