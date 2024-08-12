@@ -3,12 +3,14 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 
+import QtLocation 5.12
+import QtPositioning 5.12
 
 ApplicationWindow {
     id: main
     visible: true
-    width: 800
-    height: 600
+    width: 2560
+    height: 1440
     title: "Weather Forecast"
    // property int activeIndex: 1                  //TO INDICATE WHERE WE ARE VIEWING
 
@@ -119,93 +121,145 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignVCenter
             }
 
-
-            // Button {
-            //         width: 25
-            //         height: 25
-            //         anchors.centerIn: parent
-
-            //         contentItem: Image {
-            //             source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/drawer.png"
-            //             anchors.centerIn: parent
-            //             fillMode: Image.PreserveAspectFit
-            //         }
-            //     }
-
-
-
             // Search Box
-            // Search Box
-                            Rectangle {
-                                width: 200
-                                height: 30
-                                color: "#2e3256"  // Background color
-                                radius: 5
-                                Layout.alignment : Qt.AlignRight
-                                anchors.right: parent.right
-                                anchors.verticalCenter: parent.verticalCenter
+            Rectangle {
+                width: 220
+                height: 31
+                color: "#2e3256"
+                radius: 20
+                Layout.alignment: Qt.AlignRight
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
 
 
-                                property string searchText:""
+                property string searchText:""
 
-                                Row {
-                                    anchors.fill: parent
-                                    spacing: 5
 
-                                    TextField {
-                                        id: searchField
-                                        placeholderText: "Search"
-                                        color: "white"
+                // function to be called both by button click or by pressing enter key
+                function performSearch() {
+                    if (searchField.text.trim() === "") return; // Prevent empty searches
 
-                                        background: Rectangle {
+                    var latitude = weatherForecast.get_latitude(searchField.text);
+                    var longitude = weatherForecast.get_longitude(searchField.text);
+
+                    // Convert to numbers and check if they're valid
+                    var latNum = parseFloat(latitude);
+                    var lonNum = parseFloat(longitude);
+
+                    if (isNaN(latNum) || isNaN(lonNum)) {
+                        console.error("Invalid latitude or longitude");
+                        return;
+                    }
+
+                    // Update the map's center
+                    if (typeof map !== 'undefined' && map.center) {
+                        map.center = QtPositioning.coordinate(latNum, lonNum);
+                    } else {
+                        console.error("Map or map.center is not available");
+                    }
+
+                    // Update other UI elements
+                    try {
+                        latitudelongitude.children[0].children[0].children[0].children[1].text = `${latNum.toFixed(4)} and ${lonNum.toFixed(4)}`;
+                        maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
+                        maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(latitude, longitude);
+                        maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(latitude, longitude)} °C`;
+                        maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(latitude, longitude);
+                        weatherForecast.get_temperature_hourly(latitude, longitude, 11);
+                        weatherForecast.get_current_weather(latitude, longitude);
+                    } catch (error) {
+                        console.error("Error updating UI elements:", error);
+                    }
+                }
+
+                Row {
+                    anchors.fill: parent
+                    anchors.margins: 5
+                    spacing: 10
+                // RowLayout {
+                //     anchors.fill: parent
+                //     anchors.margins: 5
+                //     spacing: 5
+
+                    // TextField {
+                    //     id: searchField
+                    //     placeholderText: "Search"
+                    //     color: "white"
+
+                    //     background: Rectangle {
+                    //         color: "transparent"
+                    //     }
+
+                    //     anchors.left: parent.left
+                    //     anchors.right: searchButton.left
+                    //     anchors.verticalCenter: parent.verticalCenter
+                    //     leftPadding: 5
+                    //     rightPadding: 5
+                    //     padding: 5
+                    //     onAccepted: parent.parent.performSearch()
+                    // }
+                    TextField {
+                        id: searchField
+                        placeholderText: "Search location"
+                        color: "white"
+                        background: Rectangle { color: "transparent" }
+                        Layout.fillWidth: true
+                        font.pixelSize: 14
+                        anchors.left: parent.left
+                        anchors.right: searchButton.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        leftPadding: 8
+                        rightPadding: 5
+                        padding: 5
+                        onAccepted: parent.parent.performSearch()
+                    }
+
+
+                    Button {
+                            id: searchButton
+                            width: 25
+                            height: 25
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.right: parent.right
+                            anchors.rightMargin: 5
+                            background: Rectangle {
                                             color: "transparent"
+                                            border.color: "transparent"
                                         }
 
-                                        anchors.left: parent.left
-                                        anchors.right: searchButton.left
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        leftPadding: 5
-                                        rightPadding: 5
-                                        padding: 5
-                                    }
+                            contentItem: Image {
+                                source: "photos/search.png"
+                                sourceSize.width: 24
+                                sourceSize.height: 24
+                                fillMode: Image.PreserveAspectFit
+                                anchors.centerIn: parent
+                             }
 
-                                    Button {
-                                            id: searchButton
-                                            width: 25
-                                            height: 25
-                                            anchors.verticalCenter: parent.verticalCenter
-                                            anchors.right: parent.right
-                                            anchors.rightMargin: 5
-                                            background: Rectangle {
-                                                            color: "transparent"
-                                                            border.color: "transparent"
-                                                        }
-
-                                            contentItem: Image {
-                                                source: "photos/search.png"
-                                                fillMode: Image.PreserveAspectFit
-                                                anchors.centerIn: parent
-                                             }
-
-                                            onClicked: {
-                                                var latitude = weatherForecast.get_latitude(searchField.text);
-                                                var longitude = weatherForecast.get_longitude(searchField.text);
-                                                latitudelongitude.children[0].children[0].children[0].children[1].text = `${latitude} and ${longitude}`;
-                                                maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
-                                                maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(latitude, longitude);
-                                                maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(latitude, longitude)} °C`;
-                                                maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(latitude, longitude);
+                            // onClicked: {
+                            //     var latitude = weatherForecast.get_latitude(searchField.text);
+                            //     var longitude = weatherForecast.get_longitude(searchField.text);
 
 
-                                                // console.log(maincontent.children[0].children[1].children[0].children[1].children[0].children[0].children[2])
-                                                weatherForecast.get_temperature_hourly(latitude, longitude, 11);
-                                                weatherForecast.get_current_weather(latitude,longitude);
-                                                // var temp = weatherForecast.get_temperature_hourly_data(10);
-                                                // console.log(temp);
-                                            }
-                                         }
-                                    }
-                                }
+                            //     latitudelongitude.children[0].children[0].children[0].children[1].text = `${latitude} and ${longitude}`;
+                            //     maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
+                            //     maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(latitude, longitude);
+                            //     maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(latitude, longitude)} °C`;
+                            //     maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(latitude, longitude);
+
+
+                            //     // console.log(maincontent.children[0].children[1].children[0].children[1].children[0].children[0].children[2])
+                            //     weatherForecast.get_temperature_hourly(latitude, longitude, 11);
+                            //     weatherForecast.get_current_weather(latitude,longitude);
+                            //     // var temp = weatherForecast.get_temperature_hourly_data(10);
+                            //     // console.log(temp);
+
+                            //     map.center = QtPositioning.coordinate(latitude,longitude);
+                            // }
+                            onClicked: parent.parent.performSearch()
+
+                         }
+                    }
+                }
         }
     }
 
@@ -383,9 +437,18 @@ ApplicationWindow {
             }
 
             onClicked: {
-            //console.log("Searched Text: ", homeField.text)
-            console.log("function call")
-            stackView.push("Newtab.qml")//function call
+                var lat = weatherForecast.get_latitude(searchField.text);
+                var lon = weatherForecast.get_longitude(searchField.text);
+                var component = Qt.createComponent("Newtab.qml");
+                if (component.status === Component.Ready) {
+                    var newWindow = component.createObject(main, {
+                        "initialLatitude": lat,
+                        "initialLongitude": lon
+                    });
+                    newWindow.show();
+                } else {
+                    console.error("Error loading Newtab.qml:", component.errorString());
+                }
             }
 
     }
@@ -479,77 +542,6 @@ ApplicationWindow {
                }
 
 
-               // // Weather Conditions
-               // Rectangle {
-               //     Layout.fillWidth: true
-               //     height: 200
-               //     color: "white"//boxColor2
-               //     opacity: 0.8
-               //     radius: 10
-
-               //     ColumnLayout {
-               //         anchors.fill: parent
-               //         anchors.margins: 10
-               //         spacing: 10
-
-               //         Text {
-               //             text: "Weather Conditions"
-               //             font.pixelSize: 16
-               //             font.weight: Font.Bold
-               //             color: "black"
-               //         }
-
-               //         RowLayout {
-               //             spacing: 20
-
-               //             Column {
-               //                 Text {
-               //                     text: "☁️"
-               //                     font.pixelSize: 40
-               //                     anchors.horizontalCenter: parent.horizontalCenter
-               //                 }
-               //                 Text {
-               //                     text: "Cloudy"
-               //                     color: "black"
-               //                     anchors.horizontalCenter: parent.horizontalCenter
-               //                 }
-               //             }
-
-               //             Column {
-               //                 Text {
-               //                     text: "🌧️"
-               //                     font.pixelSize: 40
-               //                     anchors.horizontalCenter: parent.horizontalCenter
-               //                 }
-               //                 Text {
-               //                     text: "Rainy"
-               //                     color: "black"
-               //                     anchors.horizontalCenter: parent.horizontalCenter
-               //                 }
-               //             }
-
-               //             Column {
-               //                 // Image {
-               //                 //                                         source:"/home/sryn/Pictures/Project Pic src/cloudy.png"
-               //                 //                                         width: 30
-               //                 //                                         height: 30
-               //                 //                                         anchors.horizontalCenter: parent.horizontalCenter
-               //                 //                                     }
-               //                 Text {
-               //                  text: "☀️"
-               //                  font.pixelSize: 40
-               //                  anchors.horizontalCenter: parent.horizontalCenter
-               //                  }
-               //                 Text {
-               //                     text: "Sunny"
-               //                     color: "black"
-               //                     anchors.horizontalCenter: parent.horizontalCenter
-               //                 }
-               //             }
-               //         }
-               //     }
-               // }
-
                // Hourly Forecast
                Rectangle {
                    id:hourlyForecast
@@ -566,7 +558,7 @@ ApplicationWindow {
 
                        Text {
                            text: "Hourly Forecast"
-                           font.pixelSize: 16
+                           font.pixelSize: 25
                            font.weight: Font.Bold
                            color: "black"
                        }
@@ -578,7 +570,7 @@ ApplicationWindow {
                                model: 10
                                Rectangle {
                                    width: 55
-                                   height: 120
+                                   height: 140
                                    color: "#34495e"
                                    radius: 5
                                    Column {
@@ -594,8 +586,8 @@ ApplicationWindow {
                                            source: "/Coding/c++/git/desing/I-II-Project-/Project Pic src/cloudy.png";
                                            fillMode: Image.PreserveAspectFit
                                            anchors.horizontalCenter: parent.horizontalCenter
-                                           width: 50
-                                           height: 50
+                                           width: 55
+                                           height: 55
                                         }
                                        Text {
                                            id: tempText
@@ -605,16 +597,13 @@ ApplicationWindow {
                                            color: "black"
                                            anchors.horizontalCenter: parent.horizontalCenter
                                        }
+                                       ParallelAnimation {
+                                           running: true
+                                           NumberAnimation { target: parent; property: "opacity"; from: 0; to: 1; duration: 500; easing.type: Easing.InOutQuad }
+                                           NumberAnimation { target: parent; property: "scale"; from: 0.8; to: 1; duration: 500; easing.type: Easing.InOutQuad }
+                                       }
                                    }
                                }
-
-                               // Connections {
-                               //     target: weatherForecast
-                               //     onTemperatureHourlyData: {
-                               //         // hourlyForecast.children[0].children[0].children[0].children[0].children[0].children[3].text = "Temperature: " + temperature + " °C"
-                               //         tempText.text = "Temperature: " + temperature + " °C";
-                               //     }
-                               // }
                            }
                        }
                    }
@@ -675,9 +664,9 @@ ApplicationWindow {
 
                     GridLayout {
                         id: weatherMetrics
-                        columns: 2  // Display metrics in two columns
+                        columns: 3  // Display metrics in two columns
                         rowSpacing: 20
-                        columnSpacing: 75
+                        columnSpacing: 40
 
                         Repeater {
                             id: weatherMatrix
@@ -700,11 +689,28 @@ ApplicationWindow {
                                     Layout.alignment: Qt.AlignVCenter
                                 }
 
-                                Text {
-                                    text: model.label + " " + model.value
-                                    font.pixelSize: 18
-                                    color: "black"
-                                    Layout.alignment: Qt.AlignVCenter
+                                // Text {
+                                //     text: model.label + " " + model.value
+                                //     font.pixelSize: 18
+                                //     color: "black"
+                                //     Layout.alignment: Qt.AlignVCenter
+                                // }
+                                Column {
+                                    Text {
+                                        text: model.label
+                                        font.pixelSize: 14
+                                        color: "#7f8c8d"
+                                    }
+                                    Text {
+                                        text: model.value
+                                        font.pixelSize: 18
+                                        font.weight: Font.Bold
+                                    }
+                                }
+                                ParallelAnimation {
+                                    running: true
+                                    NumberAnimation { target: parent; property: "opacity"; from: 0; to: 1; duration: 500; easing.type: Easing.InOutQuad }
+                                    NumberAnimation { target: parent; property: "scale"; from: 0.8; to: 1; duration: 500; easing.type: Easing.InOutQuad }
                                 }
                             }
                         }
@@ -728,6 +734,92 @@ ApplicationWindow {
             anchors.leftMargin: 1000
             anchors.topMargin: 125
 
+
+            // Rectangle {
+            //     id: mapContainer
+            //     width: parent.width
+            //     height: 500
+            //     color: "transparent"
+            //     radius: 10
+            //     border.color: "#cccccc"
+            //     border.width: 1
+            //     clip: true
+
+            //     Map {
+            //         id: map
+            //         anchors.fill: parent
+            //         plugin: Plugin { name: "osm" }
+            //         center: QtPositioning.coordinate(27.7172, 85.3240) // Kathmandu coordinates
+            //         zoomLevel: 12
+
+            //         MapQuickItem {
+            //             coordinate: map.center
+            //             anchorPoint.x: image.width / 2
+            //             anchorPoint.y: image.height
+
+            //             sourceItem: Image {
+            //                 id: image
+            //                 source: "path/to/map-pin-icon.png"
+            //                 width: 40
+            //                 height: 40
+
+            //                 SequentialAnimation on y {
+            //                     loops: Animation.Infinite
+            //                     NumberAnimation { from: 0; to: -10; duration: 300; easing.type: Easing.InOutQuad }
+            //                     NumberAnimation { from: -10; to: 0; duration: 300; easing.type: Easing.InOutQuad }
+            //                 }
+            //             }
+            //         }
+            //     }
+
+            //     Rectangle {
+            //         anchors.top: parent.top
+            //         anchors.left: parent.left
+            //         anchors.margins: 10
+            //         width: mapControls.width + 20
+            //         height: mapControls.height + 20
+            //         color: "#ffffff"
+            //         opacity: 0.8
+            //         radius: 5
+
+            //         Column {
+            //             id: mapControls
+            //             spacing: 10
+            //             padding: 10
+
+            //             Button {
+            //                 text: "+"
+            //                 onClicked: map.zoomLevel++
+            //                 width: 40
+            //                 height: 40
+            //             }
+
+            //             Button {
+            //                 text: "-"
+            //                 onClicked: map.zoomLevel--
+            //                 width: 40
+            //                 height: 40
+            //             }
+            //         }
+            //     }
+
+            //     Rectangle {
+            //         anchors.bottom: parent.bottom
+            //         anchors.left: parent.left
+            //         anchors.right: parent.right
+            //         height: 30
+            //         color: "#ffffff"
+            //         opacity: 0.8
+
+            //         Text {
+            //             anchors.centerIn: parent
+            //             text: "Map data Â© OpenStreetMap contributors"
+            //             font.pixelSize: 12
+            //             color: "#333333"
+            //         }
+            //     }
+            // }
+
             Rectangle {
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
@@ -747,11 +839,60 @@ ApplicationWindow {
                     //     fillMode: Image.PreserveAspectCrop
                     // }
 
-                    Image {
-                        source: "photos/map.png"
-                        // source: "http://maps.openweathermap.org/maps/2.0/weather/TA2/0/0/0?appid=01b70166b923c25c030d53acdc92e93d"
+                    //  Image {
+                    //     source: "photos/map.png"
+                    //     //source: "http://maps.openweathermap.org/maps/2.0/weather/TA2/0/0/0?appid=01b70166b923c25c030d53acdc92e93d"
+                    //     anchors.fill: parent
+                    //     fillMode: Image.PreserveAspectCrop
+                    //     opacity: 100
+
+                   // }
+
+                    id : mapContainer
+                    Map {
+                        id: map
                         anchors.fill: parent
-                        fillMode: Image.PreserveAspectCrop
+                        plugin: Plugin {
+                               name: "osm"
+                           //      parameters: [
+                           //                      { key: "osm.mapping.providersrepository.address", value: "https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=4913456783de4d6e8f896059fe631d9b" },
+                           //                      { key: "osm.mapping.highdpi_tiles", value: true }
+                           //                  ]
+                        }
+                        center: QtPositioning.coordinate(27.7172, 85.3240) // Coordinates for Kathmandu
+                        zoomLevel: 13 // Adjust this value to set the initial zoom level
+
+                        // for map functionality
+                    //     gesture.enabled: true
+                    //     gesture.flickDeceleration: 3000
+                    //     gesture.activeGestures: MapGestureArea.PanGesture | MapGestureArea.FlickGesture | MapGestureArea.PinchGesture
+                    }
+                    // a buttom - to expand the map by switching to the Newtab.qml
+                    Button{
+                        id: expandMapButton
+                        anchors.top: parent.top
+                        anchors.left:  parent.left
+                        width: 30
+                        height: 30
+                        text:"⛶"
+
+                        //the main function :
+                        onClicked: {
+                            var lat = weatherForecast.get_latitude(searchField.text);
+                            var lon = weatherForecast.get_longitude(searchField.text);
+                            var component = Qt.createComponent("Newtab.qml");
+                            if (component.status === Component.Ready) {
+                                var newWindow = component.createObject(main, {
+                                    "initialLatitude": lat,
+                                    "initialLongitude": lon
+                                });
+                                newWindow.show();
+                            } else {
+                                console.error("Error loading Newtab.qml:", component.errorString());
+                            }
+                                }
+
+
                     }
 
                     Rectangle
@@ -824,14 +965,13 @@ ApplicationWindow {
                 height: 60
                 color: "#E0E0E0"
                 opacity: 0.8
-                radius: 10
+                radius: 15
                 anchors.topMargin: parent.topMargin
                 RowLayout {
                     anchors.fill: parent
                     anchors.margins: 20
                     spacing: 10
                     anchors.topMargin: 10
-
                     Image {
                             source: "photos/maps-and-flags.png"
                             sourceSize.width: 24
@@ -839,10 +979,16 @@ ApplicationWindow {
                             Layout.alignment: Qt.AlignVCenter
                         }
 
+                    // Text {
+                    //     text: "Location"
+                    //     font.pixelSize: 24
+                    //     font.weight: Font.Bold
+                    // }
+
                     Text {
                         id: latText;
                         text: `${weatherForecast.get_latitude("Kathmandu")} | ${weatherForecast.get_longitude("Kathmandu")}`
-                        font.pixelSize: 28
+                        font.pixelSize: 24
                         font.weight: Font.Bold
                         color: "#333333"
                         Layout.alignment: Qt.AlignVCenter
