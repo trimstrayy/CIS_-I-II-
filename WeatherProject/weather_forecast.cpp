@@ -362,26 +362,24 @@ QString WeatherForecast::get_longitude(QString city_name)
     //fetching data
     QJsonDocument jsonDoc = response_data(response(url));
 
-    QString result;
+    QString result = "error";  // Default to "error"
 
-    if (jsonDoc.isArray())
-    {
+    if (!jsonDoc.isEmpty() && jsonDoc.isArray()) {
         QJsonArray jsonArray = jsonDoc.array();
 
-        //Parsing the JSON to Object
-        QJsonObject obj = jsonArray[0].toObject();
+        if (!jsonArray.isEmpty()) {
+            QJsonObject obj = jsonArray[0].toObject();
 
-        if(obj.contains("lon")) //finding the latitude of the given city name
-        {
-            QJsonValue lonvalue = obj.value("lon");
-            double lon = lonvalue.toDouble();
-            result = QString::number(lon, 'f', 8);
+            if (obj.contains("lon")) {
+                QJsonValue lonvalue = obj.value("lon");
+                double lon = lonvalue.toDouble();
+                result = QString::number(lon, 'f', 8);
+            }
         }
+    } else {
+        qDebug() << "Empty or invalid JSON doc.";
     }
-    else
-    {
-        qDebug() << "Failed to create JSON doc.";
-    }
+
 
     return result;
 
@@ -398,24 +396,23 @@ QString WeatherForecast::get_latitude(QString city_name)        // get's latitud
     strcpy(url, string_url.c_str());
 
     QJsonDocument jsonDoc = response_data(response(url));
+    qDebug() << jsonDoc;
+    QString result = "error";  // Default to "error"
 
-    QString result;
-
-    if (jsonDoc.isArray()) {
+    if (!jsonDoc.isEmpty() && jsonDoc.isArray()) {
         QJsonArray jsonArray = jsonDoc.array();
 
-        //Parsing the JSON to Object
-        QJsonObject obj = jsonArray[0].toObject();
+        if (!jsonArray.isEmpty()) {
+            QJsonObject obj = jsonArray[0].toObject();
 
-        if(obj.contains("lat")) //finding the latitude of the given city name
-        {
-            QJsonValue latvalue = obj.value("lat");
-            double lat = latvalue.toDouble();
-            result =  QString::number(lat,'f',8);
+            if (obj.contains("lat")) {
+                QJsonValue latvalue = obj.value("lat");
+                double lat = latvalue.toDouble();
+                result = QString::number(lat, 'f', 8);
+            }
         }
-    }
-    else {
-        qDebug() << "Failed to create JSON doc.";
+    } else {
+        qDebug() << "Empty or invalid JSON doc.";
     }
 
     return result;
