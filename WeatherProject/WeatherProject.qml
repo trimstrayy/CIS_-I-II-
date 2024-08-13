@@ -1,10 +1,10 @@
-import QtQuick 2.15
+import QtQuick
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
-
 import QtLocation 5.12
 import QtPositioning 5.12
+import QtMultimedia
 
 ApplicationWindow {
     id: main
@@ -25,19 +25,29 @@ ApplicationWindow {
 
 
 
+    Item {
+        anchors.fill: parent
 
-    AnimatedImage {
-        id: animatedImage
-        // source: "photos/weathervid.gif"
-        source: "photos/background.jpeg"
-        // source: "photos/fug.jpg"
-        // source: "photos/partlyclouds.jpg"
-        // source: "photos/thunderbg.jpg"
-        // source: "photos/rainybg3.jpg"
-        anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
-        fillMode: Image.PreserveAspectCrop
+        MediaPlayer {
+            id: player
+            source: "file:///C:/Users/paric/final_project/CIS_-I-II-/WeatherProject/video/background.mp4"
+            audioOutput: AudioOutput {
+                muted: true  // Mute the audio
+            }
+            videoOutput: videoOutput
+            loops: MediaPlayer.Infinite
+        }
+
+        VideoOutput {
+            id: videoOutput
+            anchors.fill: parent
+            fillMode: VideoOutput.PreserveAspectCrop
+        }
+
+        Component.onCompleted: {
+            player.play()  // Start playing when the component is loaded
+        }
     }
-
     property string errorMessage: ""
 
     Rectangle {
@@ -429,7 +439,7 @@ ApplicationWindow {
             }
         }
 
-    Button {
+   /* Button {
             id: mapButton
             width: 50
             height: 50
@@ -507,7 +517,7 @@ ApplicationWindow {
                 }
             }
 
-    }
+    }*/
 
     Button {
         id: weatherinfotab
@@ -516,7 +526,7 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.rightMargin: 1
         anchors.top: parent.top
-        anchors.topMargin: 600
+        anchors.topMargin: 400
 
         background: Rectangle {
             color: "transparent"
@@ -528,15 +538,17 @@ ApplicationWindow {
             fillMode: Image.PreserveAspectFit
             anchors.centerIn: parent
         }
-        onClicked: {
-              var component = Qt.createComponent("Weatherinfo.qml");
-              if (component.status === Component.Ready) {
-                  var weatherWindow = component.createObject(main);
-                  weatherWindow.show();
-              } else {
-                  console.error("Error loading WeatherInfo.qml:", component.errorString());
-              }
-          }
+
+            onClicked: {
+                var component = Qt.createComponent("Weatherinfo.qml");
+                if (component.status === Component.Ready) {
+                    var weatherWindow = component.createObject(main);
+                    weatherWindow.updateWeatherInfo(searchField.text);
+                    weatherWindow.show();
+                } else {
+                    console.error("Error loading WeatherInfo.qml:", component.errorString());
+                }
+            }
 
     }
 
@@ -735,7 +747,7 @@ ApplicationWindow {
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: 250
-                color: boxColor1 // Light gray background
+                color: "transparent" // Light gray background
                 opacity: 0.8
                 radius: 10
 
@@ -756,26 +768,26 @@ ApplicationWindow {
                         columns: 3  // Display metrics in two columns
                         rowSpacing: 20
                         columnSpacing: 40
-                        Button{
-                            id: expandinfo
-                            anchors.bottom: parent.bottom
-                            anchors.right:  parent.right
-                            width: 30
-                            height: 30
-                            text:"i"
+//                         Button{
+//                             id: expandinfo
+//                             anchors.bottom: parent.bottom
+//                             anchors.right:  parent.right
+//                             width: 30
+//                             height: 30
+//                             text:"i"
 
-                            //the main function :
-                            onClicked: {
-                                var component = Qt.createComponent("Weatherinfo.qml");
-                                if (component.status === Component.Ready) {
-                                    var weatherWindow = component.createObject(main);
-                                    weatherWindow.show();
-                                } else {
-                                    console.error("Error loading WeatherInfo.qml:", component.errorString());
-                                }
-}
+//                             //the main function :
+//                             onClicked: {
+//                                 var component = Qt.createComponent("Weatherinfo.qml");
+//                                 if (component.status === Component.Ready) {
+//                                     var weatherWindow = component.createObject(main);
+//                                     weatherWindow.show();
+//                                 } else {
+//                                     console.error("Error loading WeatherInfo.qml:", component.errorString());
+//                                 }
+// }
 
-                        }
+
 
                         Repeater {
                             id: weatherMatrix

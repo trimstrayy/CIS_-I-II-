@@ -11,35 +11,19 @@ Window {
     color: "#f0f0f0"
     visible: true
 
+    property string cityName: ""
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 20
         spacing: 15
 
-        TextField {
-            id: cityInput
-            placeholderText: "Enter city name"
-            font.pixelSize: 16
+        Text {
+            id: cityNameDisplay
+            text: "Weather Information for " + cityName
+            font.pixelSize: 20
+            font.bold: true
             Layout.fillWidth: true
-        }
-
-        Button {
-            text: "Get Weather Info"
-            font.pixelSize: 16
-            Layout.fillWidth: true
-            background: Rectangle {
-                color: "#2196F3"
-                radius: 4
-            }
-            contentItem: Text {
-                text: "Get Weather Info"
-                color: "#ffffff"
-                font.pixelSize: 16
-                anchors.centerIn: parent
-            }
-            onClicked: {
-                weatherInfo.fetchResult(cityInput.text)
-            }
         }
 
         ScrollView {
@@ -52,7 +36,6 @@ Window {
                 border.color: "#dcdcdc"
                 border.width: 1
             }
-
             TextArea {
                 id: weatherDisplay
                 readOnly: true
@@ -79,5 +62,10 @@ Window {
                    .replace(/Wind Data:/g, "<b>Wind Data:</b>")
                    .replace(/Air Quality Index \(AQI\):/g, "<b>Air Quality Index (AQI):</b>")
                    .replace(/Pollutants/g, "<b>Pollutants</b>")
+    }
+
+    function updateWeatherInfo(city) {
+        cityName = city
+        weatherInfo.fetchResult(city)
     }
 }

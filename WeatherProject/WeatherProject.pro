@@ -27,6 +27,9 @@ INCLUDEPATH += C:/curl/curl-8.9.0_1-win64-mingw/include \
         C:/Qt/6.8.0/include/QtLocation
 
 LIBS += -LC:\curl\curl-8.9.0_1-win64-mingw\lib -lcurl
+QT += multimedia
+
+
 
 DISTFILES += \
     Newtab.qml \
