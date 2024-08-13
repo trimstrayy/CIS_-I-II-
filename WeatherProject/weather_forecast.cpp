@@ -257,6 +257,21 @@ QString WeatherForecast::getCity(QString city_name)
 }
 
 
+QString WeatherForecast::get_date_time(QJsonObject jsonObj)
+{
+    double datetime = jsonObj["dt"].toDouble();
+    QJsonObject sys = jsonObj["sys"].toObject();
+    QString time_zone_country = sys["country"].toString();      // Fetching the Country Code from sys
+    int timezone = jsonObj["timezone"].toInteger();
+    QDateTime time = QDateTime::fromSecsSinceEpoch(datetime);
+    QTimeZone timeZone(timezone);
+    time.setTimeZone(timeZone);
+    QString datetimeString = time.toString("yyyy-MM-dd");
+    qDebug() << datetimeString;
+    return datetimeString;
+}
+
+
 QString WeatherForecast::get_visibility_data(QJsonObject jsonObj)
 {
     double visibility = jsonObj["visibility"].toDouble();
@@ -339,6 +354,7 @@ void WeatherForecast::get_current_weather(QString latitude, QString longitude)
     QString wind = "";
     QString visibility = "";
     QString rain = "";
+    QString datetime = "";
     humidity = get_humidity_data(jsonObj);
     qDebug() << humidity;
     cloudiness = get_cloudiness_data(jsonObj);
@@ -351,6 +367,8 @@ void WeatherForecast::get_current_weather(QString latitude, QString longitude)
     qDebug() << rain;
     visibility = get_visibility_data(jsonObj);
     qDebug() << visibility;
+    datetime = get_date_time(jsonObj);
+    qDebug() << datetime;
 
     emit humidityData(humidity);
     emit cloudinessData(cloudiness);
@@ -358,6 +376,7 @@ void WeatherForecast::get_current_weather(QString latitude, QString longitude)
     emit windData(wind);
     emit rainData(rain);
     emit visibilityData(visibility);
+    emit dateTimeData(datetime);
 
 }
 

@@ -64,6 +64,7 @@ public:
     Q_INVOKABLE QString get_wind_data(QJsonObject jsonObj);
     Q_INVOKABLE QString get_rain_data(QJsonObject jsonObj);
     Q_INVOKABLE QString get_visibility_data(QJsonObject jsonObj);
+    Q_INVOKABLE QString get_date_time(QJsonObject jsonObj);
     Q_INVOKABLE void get_temperature_hourly(QString latitude, QString longitude, int index);
     Q_INVOKABLE QString get_temperature_hourly_data(QJsonArray forecast, int index);
     Q_INVOKABLE QString get_icon_hourly_data(QJsonArray forecast, int index);
@@ -82,6 +83,7 @@ signals:
     void windData(const QString wind);
     void rainData(const QString rain);
     void visibilityData(const QString visibility);
+    void dateTimeData(const QString datetime);
 
 private:
     WeatherInfo m_weatherInfo;  // Use WeatherInfo as a member

@@ -24,13 +24,27 @@ ApplicationWindow {
     // property var temperatures: weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
 
 
+    // AnimatedImage {
+    //         id: animatedImage
+    //         // source: "photos/weathervid.gif"
+    //         source: "photos/clearnepal.jpg"
+    //         // source: "photos/background.jpeg"
+    //         // source: "photos/fug.jpg"
+    //         // source: "photos/partlyclouds.jpg"
+    //         // source: "photos/thunderbg.jpg"
+    //         // source: "photos/rainybg3.jpg"
+    //         anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
+    //         fillMode: Image.PreserveAspectCrop
+    //     }
+
+
 
     Item {
         anchors.fill: parent
 
         MediaPlayer {
             id: player
-            source: "file:///C:/Users/paric/final_project/CIS_-I-II-/WeatherProject/video/background.mp4"
+            source: "video/background.mp4"
             audioOutput: AudioOutput {
                 muted: true  // Mute the audio
             }
@@ -51,24 +65,27 @@ ApplicationWindow {
     property string errorMessage: ""
 
     Rectangle {
-        id: errorPopup
-        width: 400
-        height: 100
-        color: "#E74C3C"
-        radius: 10
-        anchors.centerIn: parent
-        visible: false
-        opacity: 0.9
+       id: errorPopup
+       width: 300
+       height: 50
+       color: "#E74C3C"
+       radius: 10
+       anchors.centerIn: parent
+       visible: false
+       opacity: 1
+       z: 1000 // This ensures it appears above other elements
 
-        Text {
-            anchors.centerIn: parent
-            color: "white"
-            font.pixelSize: 16
-            text: errorMessage
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-        }
+
+       Text {
+           anchors.centerIn: parent
+           color: "white"
+           font.pixelSize: 16
+           text: errorMessage
+           horizontalAlignment: Text.AlignHCenter
+           verticalAlignment: Text.AlignVCenter
+       }
     }
+
 
     // Top navigation bar
     Rectangle {
@@ -165,78 +182,41 @@ ApplicationWindow {
 
                 property string searchText:""
 
-                // // function to be called both by button click or by pressing enter key
-                // function performSearch() {
-                //     try {
-                //     if (searchField.text.trim() === "") throw "Please enter a location.";
-
-                //     var latitude = weatherForecast.get_latitude(searchField.text);
-                //     var longitude = weatherForecast.get_longitude(searchField.text);
-
-                //     // Convert to numbers and check if they're valid
-                //     var latNum = parseFloat(latitude);
-                //     var lonNum = parseFloat(longitude);
-
-                //     if (isNaN(latNum) || isNaN(lonNum)) throw "Invalid city name. Please try again.";
-
-                //     // Update the map's center
-                //     if (typeof map !== 'undefined' && map.center) {
-                //         map.center = QtPositioning.coordinate(latNum, lonNum);
-                //     } else {
-                //         console.error("Map or map.center is not available");
-                //     }
-
-                //     // Update other UI elements
-                //         latitudelongitude.children[0].children[0].children[0].children[1].text = `${latNum.toFixed(4)} and ${lonNum.toFixed(4)}`;
-                //         maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
-                //         maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(latitude, longitude);
-                //         maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(latitude, longitude)} °C`;
-                //         maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(latitude, longitude);
-                //         weatherForecast.get_temperature_hourly(latitude, longitude, 11);
-                //         weatherForecast.get_current_weather(latitude, longitude);
-                //     } catch (error) {
-                //         // console.error("Error updating UI elements:", error);
-                //         errorMessage = error;
-                //         errorPopup.visible = true;
-                //         Qt.callLater(() => errorPopup.visible = false, 3000); // Hide after 3 seconds
-                //     }
-                // }
-
-                // property string errorMessage: ""
-
                 function performSearch() {
-                    try {
-                        if (searchField.text.trim() === "") throw "Please enter a location.";
+                try {
+                    if (searchField.text.trim() === "") throw "Please enter a location.";
 
-                        var latitude = weatherForecast.get_latitude(searchField.text);
-                        var longitude = weatherForecast.get_longitude(searchField.text);
+                    var latitude = weatherForecast.get_latitude(searchField.text);
+                    var longitude = weatherForecast.get_longitude(searchField.text);
 
-                        if (latitude === "error" || longitude === "error") throw "Invalid city name. Please try again.";
+                    if (latitude === "error" || longitude === "error") throw "Invalid city name. Please try again.";
 
-                        var latNum = parseFloat(latitude);
-                        var lonNum = parseFloat(longitude);
+                    var latNum = parseFloat(latitude);
+                    var lonNum = parseFloat(longitude);
 
-                        if (isNaN(latNum) || isNaN(lonNum)) throw "Invalid city name. Please try again.";
+                    if (isNaN(latNum) || isNaN(lonNum)) throw "Invalid city name. Please try again.";
 
-                        if (typeof map !== 'undefined' && map.center) {
-                            map.center = QtPositioning.coordinate(latNum, lonNum);
-                        } else {
-                            throw "Map or map.center is not available";
-                        }
-
-                        latitudelongitude.children[0].children[0].children[0].children[1].text = `${latNum.toFixed(4)} and ${lonNum.toFixed(4)}`;
-                        maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
-                        maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(latitude, longitude);
-                        maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(latitude, longitude)} °C`;
-                        maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(latitude, longitude);
-                        weatherForecast.get_temperature_hourly(latitude, longitude, 11);
-                        weatherForecast.get_current_weather(latitude, longitude);
-                    }  catch (error) {
-                        errorMessage = error;
-                        errorPopup.visible = true;
-                        Qt.createQmlObject("import QtQuick 2.0; Timer { interval: 3000; running: true; repeat: false; onTriggered: errorPopup.visible = false }", errorPopup);
+                    if (typeof map !== 'undefined' && map.center) {
+                        map.center = QtPositioning.coordinate(latNum, lonNum);
+                    } else {
+                        throw "Map or map.center is not available";
                     }
+
+                    latitudelongitude.children[0].children[0].children[0].children[1].text = `${latNum.toFixed(4)} and ${lonNum.toFixed(4)}`;
+                    maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
+                    maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(latitude, longitude);
+                    maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(latitude, longitude)} °C`;
+                    maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(latitude, longitude);
+                    weatherForecast.get_temperature_hourly(latitude, longitude, 11);
+                    weatherForecast.get_current_weather(latitude, longitude);
+                    // weatherForecast.get_aqi(latitude, longitude);
+                    console.log(aqi.children[0].children[0].children[0].children[0]);
+                }  catch (error) {
+                    errorMessage = error;
+                    errorPopup.visible = true;
+                    Qt.createQmlObject("import QtQuick 2.0; Timer { interval: 3000; running: true; repeat: false; onTriggered: errorPopup.visible = false }", errorPopup);
                 }
+            }
 
                 Row {
                     anchors.fill: parent
@@ -820,7 +800,7 @@ ApplicationWindow {
                                     Text {
                                         text: model.label
                                         font.pixelSize: 14
-                                        color: "#7f8c8d"
+                                        color: "black"
                                     }
                                     Text {
                                         text: model.value
@@ -1122,88 +1102,110 @@ ApplicationWindow {
         }
 
     }
-    //---------------------------------------------------------POPULATION---------------------------------------------------
-    Item{
-        anchors.fill: parent
-        anchors.margins: 20
+    //---------------------------------------------------------DATETIME---------------------------------------------------
+       Item {
+           id: date
+           anchors.fill: parent
+           anchors.margins: 20
 
-        GridLayout {
-            anchors.left: parent.left
-            anchors.top: parent.top
-            width: parent.width * 0.4
-            columns: 2
-            rowSpacing: 200
-            columnSpacing: 200
-            anchors.leftMargin: 1000    //kati left ma xa
-            anchors.topMargin: 695                              //top  bata kati tala xa
+           GridLayout {
+               anchors.left: parent.left
+               anchors.top: parent.top
+               width: parent.width * 0.2
+               columns: 2
+               rowSpacing: 400
+               columnSpacing: 200
+               anchors.leftMargin: 1450
+               anchors.topMargin: 780
 
-            Rectangle {
-                Layout.columnSpan: 2
-                Layout.fillWidth: true
-                height: 60
-                color: "#E0E0E0"
-                opacity: 0.8
-                radius: 10
-                anchors.topMargin: parent.topMargin
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
-                    spacing: 10
-                    anchors.topMargin: 10
+               Rectangle {
+                   Layout.columnSpan: 2
+                   Layout.fillWidth: true
+                   height: 60
+                   color: "transparent"
+                   opacity: 0.8
+                   radius: 10
 
-                    Text {
-                        text: "Population"
-                        font.pixelSize: 30
-                        font.weight: Font.Bold
-                        color: "#333333"
-                    }
+                   ColumnLayout {
+                       anchors.fill: parent
+                       anchors.margins: 20
+                       spacing: 5
+                       anchors.topMargin: 10
 
-                }
-            }
-        }
+                       Text {
+                           id: timeText
+                           font.pixelSize: 20
+                           font.weight: Font.Bold
+                           color: "white"
+                           anchors.horizontalCenter: parent.horizontalCenter
+                       }
 
-    }
-    //----------------------------------------------------AIR QUALITY INDEX----------------------------------------
-    Item{
-        anchors.fill: parent
-        anchors.margins: 20
+                       Text {
+                             id: dateText
+                             font.pixelSize: 20
+                             font.weight: Font.Bold
+                             color: "white"
+                             anchors.horizontalCenter: parent.horizontalCenter
+                         }
+                   }
+               }
+           }
 
-        GridLayout {
-            anchors.left: parent.left
-            anchors.top: parent.top
-            width: parent.width * 0.4
-            columns: 2
-            rowSpacing: 200
-            columnSpacing: 200
-            anchors.leftMargin: 1000    //kati left ma xa
-            anchors.topMargin: 760                                //top  bata kati tala xa
+           Timer {
+               interval: 1000 // Update every second
+               running: true
+               repeat: true
+               triggeredOnStart: true
+               onTriggered: {
+                   var now = new Date()
+                   // Adjust for Nepal time (UTC+5:45)
+                   now.setHours(now.getUTCHours() + 5)
+                   now.setMinutes(now.getUTCMinutes() + 45)
+                   timeText.text = Qt.formatDateTime(now, "hh:mm:ss")
+               }
+           }
+       }
+       // //----------------------------------------------------AIR QUALITY INDEX----------------------------------------
+       // Item{
+       //     anchors.fill: parent
+       //     anchors.margins: 20
 
-            Rectangle {
-                Layout.columnSpan: 2
-                Layout.fillWidth: true
-                height: 60
-                color: "#E0E0E0"
-                opacity: 0.8
-                radius: 10
-                anchors.topMargin: parent.topMargin
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 20
-                    spacing: 10
-                    anchors.topMargin: 10
+       //     GridLayout {
+       //         anchors.left: parent.left
+       //         anchors.top: parent.top
+       //         width: parent.width * 0.4
+       //         columns: 2
+       //         rowSpacing: 200
+       //         columnSpacing: 200
+       //         anchors.leftMargin: 1000    //kati left ma xa
+       //         anchors.topMargin: 760                                //top  bata kati tala xa
 
-                    Text {
-                        text: "Air Quality Index"
-                        font.pixelSize: 30
-                        font.weight: Font.Bold
-                        color: "#333333"
-                    }
+       //         Rectangle {
+       //             Layout.columnSpan: 2
+       //             Layout.fillWidth: true
+       //             height: 60
+       //             color: "#E0E0E0"
+       //             opacity: 0.8
+       //             radius: 10
+       //             anchors.topMargin: parent.topMargin
+       //             ColumnLayout {
+       //                 anchors.fill: parent
+       //                 anchors.margins: 20
+       //                 spacing: 10
+       //                 anchors.topMargin: 10
 
-                }
-            }
-        }
+       //                 Text {
+       //                     text: "Air Quality Index"
+       //                     font.pixelSize: 30
+       //                     font.weight: Font.Bold
+       //                     color: "#333333"
+       //                 }
 
-    }
+       //             }
+       //         }
+       //     }
+
+       // }
     Connections {
        target: weatherForecast
        function onTemperatureHourlyData(temperature, index) {
@@ -1291,6 +1293,12 @@ ApplicationWindow {
              }
          }
       }
+
+      function ondateTimeData(datetime)
+       {
+         console.log(date.children[0].children[0].children[0].children[0]);
+         date.children[0].children[0].children[0].children[1].text = datetime;
+       }
 
    }
 
