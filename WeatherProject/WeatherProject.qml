@@ -822,227 +822,103 @@ ApplicationWindow {
     }
     //--------------------------------------------------------MAP------------------------------------------------------------------
     Item {
-        anchors.fill: parent
-        anchors.margins: 20
+            anchors.fill: parent
+            anchors.margins: 20
 
-        GridLayout {
-            anchors.left: parent.left
-            anchors.top: parent.top
-            width: parent.width * 0.4
-            columns: 2
-            rowSpacing: 200
-            columnSpacing: 200
-            anchors.leftMargin: 1000
-            anchors.topMargin: 125
+            GridLayout {
+                anchors.left: parent.left
+                anchors.top: parent.top
+                width: parent.width * 0.4
+                columns: 2
+                rowSpacing: 200
+                columnSpacing: 200
+                anchors.leftMargin: 1000
+                anchors.topMargin: 125
 
+                Rectangle {
+                    Layout.columnSpan: 2
+                    Layout.fillWidth: true
+                    height: 500
+                    color: "white"//boxColor4
+                    opacity: 0.7
+                    radius: 10
 
-            // Rectangle {
-            //     id: mapContainer
-            //     width: parent.width
-            //     height: 500
-            //     color: "transparent"
-            //     radius: 10
-            //     border.color: "#cccccc"
-            //     border.width: 1
-            //     clip: true
-
-            //     Map {
-            //         id: map
-            //         anchors.fill: parent
-            //         plugin: Plugin { name: "osm" }
-            //         center: QtPositioning.coordinate(27.7172, 85.3240) // Kathmandu coordinates
-            //         zoomLevel: 12
-
-            //         MapQuickItem {
-            //             coordinate: map.center
-            //             anchorPoint.x: image.width / 2
-            //             anchorPoint.y: image.height
-
-            //             sourceItem: Image {
-            //                 id: image
-            //                 source: "path/to/map-pin-icon.png"
-            //                 width: 40
-            //                 height: 40
-
-            //                 SequentialAnimation on y {
-            //                     loops: Animation.Infinite
-            //                     NumberAnimation { from: 0; to: -10; duration: 300; easing.type: Easing.InOutQuad }
-            //                     NumberAnimation { from: -10; to: 0; duration: 300; easing.type: Easing.InOutQuad }
-            //                 }
-            //             }
-            //         }
-            //     }
-
-            //     Rectangle {
-            //         anchors.top: parent.top
-            //         anchors.left: parent.left
-            //         anchors.margins: 10
-            //         width: mapControls.width + 20
-            //         height: mapControls.height + 20
-            //         color: "#ffffff"
-            //         opacity: 0.8
-            //         radius: 5
-
-            //         Column {
-            //             id: mapControls
-            //             spacing: 10
-            //             padding: 10
-
-            //             Button {
-            //                 text: "+"
-            //                 onClicked: map.zoomLevel++
-            //                 width: 40
-            //                 height: 40
-            //             }
-
-            //             Button {
-            //                 text: "-"
-            //                 onClicked: map.zoomLevel--
-            //                 width: 40
-            //                 height: 40
-            //             }
-            //         }
-            //     }
-
-            //     Rectangle {
-            //         anchors.bottom: parent.bottom
-            //         anchors.left: parent.left
-            //         anchors.right: parent.right
-            //         height: 30
-            //         color: "#ffffff"
-            //         opacity: 0.8
-
-            //         Text {
-            //             anchors.centerIn: parent
-            //             text: "Map data Â© OpenStreetMap contributors"
-            //             font.pixelSize: 12
-            //             color: "#333333"
-            //         }
-            //     }
-            // }
-
-            Rectangle {
-                Layout.columnSpan: 2
-                Layout.fillWidth: true
-                height: 500
-                color: "white"//boxColor4
-                opacity: 0.7
-                radius: 10
-
-                Item {
-                    anchors.fill: parent
-
-                    // Image {
-                    //     // source: "photos/map.png"
-                    //     source: "file:///C:/Coding/c++/New%20folder/vector-world-map.svg"
-                    //     // source: "http://maps.openweathermap.org/maps/2.0/weather/TA2/0/0/0?appid=01b70166b923c25c030d53acdc92e93d&fill_bound=true&opacity=0.6&0:E1C86400; 0.1:C8963200; 0.2:9696AA00; 0.5:7878BE00; 1:6E6ECD4C; 10:5050E1B2; 140:1414FFE5"
-                    //     anchors.fill: parent
-                    //     fillMode: Image.PreserveAspectCrop
-                    // }
-
-                    //  Image {
-                    //     source: "photos/map.png"
-                    //     //source: "http://maps.openweathermap.org/maps/2.0/weather/TA2/0/0/0?appid=01b70166b923c25c030d53acdc92e93d"
-                    //     anchors.fill: parent
-                    //     fillMode: Image.PreserveAspectCrop
-                    //     opacity: 100
-
-                   // }
-
-                    id : mapContainer
-                    Map {
-                        id: map
+                    Item {
                         anchors.fill: parent
-                        plugin: Plugin {
-                               name: "osm"
-                           //      parameters: [
-                           //                      { key: "osm.mapping.providersrepository.address", value: "https://tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=4913456783de4d6e8f896059fe631d9b" },
-                           //                      { key: "osm.mapping.highdpi_tiles", value: true }
-                           //                  ]
-                        }
-                        center: QtPositioning.coordinate(27.7172, 85.3240) // Coordinates for Kathmandu
-                        zoomLevel: 13 // Adjust this value to set the initial zoom level
-
-                        // for map functionality
-                    //     gesture.enabled: true
-                    //     gesture.flickDeceleration: 3000
-                    //     gesture.activeGestures: MapGestureArea.PanGesture | MapGestureArea.FlickGesture | MapGestureArea.PinchGesture
-                    }
-                    // a buttom - to expand the map by switching to the Newtab.qml
-                    Button{
-                        id: expandMapButton
-                        anchors.top: parent.top
-                        anchors.left:  parent.left
-                        width: 30
-                        height: 30
-                        text:"⛶"
-
-                        //the main function :
-                        onClicked: {
-                            var lat = weatherForecast.get_latitude(searchField.text);
-                            var lon = weatherForecast.get_longitude(searchField.text);
-                            var component = Qt.createComponent("Newtab.qml");
-                            if (component.status === Component.Ready) {
-                                var newWindow = component.createObject(main, {
-                                    "initialLatitude": lat,
-                                    "initialLongitude": lon
-                                });
-                                newWindow.show();
-                            } else {
-                                console.error("Error loading Newtab.qml:", component.errorString());
+                        id: mapContainer
+                        Map {
+                            id: map
+                            anchors.fill: parent
+                            plugin: Plugin {
+                                name: "osm"
                             }
+                            center: QtPositioning.coordinate(27.7172, 85.3240) // Coordinates for Kathmandu
+                            zoomLevel: 13 // Adjust this value to set the initial zoom level
+
+                            Button {
+                                id: expandMapButton
+                                anchors.top: parent.top
+                                anchors.left: parent.left
+                                width: 30
+                                height: 30
+                                text: "⛶"
+                                onClicked: {
+                                    var component = Qt.createComponent("Newtab.qml");
+                                    if (component.status === Component.Ready) {
+                                        var newWindow = component.createObject(main, {"latitude": map.center.latitude, "longitude": map.center.longitude});
+                                        newWindow.show();
+                                    } else {
+                                        console.error("Error loading newTab.qml:", component.errorString());
+                                    }
                                 }
-
-
-                    }
-
-                    Rectangle
-                    {
-                        anchors.left: parent.left
-                        anchors.top: parent.top
-                        anchors.margins: 10
-                        width: contentColumn.width + 20
-                        height: contentColumn.height + 20
-                        color: "white"
-                        opacity: 0.7
-                        radius: 5
-
-                       /* Column {
-                            id: contentColumn
-                            anchors.centerIn: parent
-                            spacing: 5
-
-                            Text {
-                                text: "Kathmandu"
-                                font.pixelSize: 24
-                                font.weight: Font.Bold
-                                color: "black"
                             }
 
-                            Text {
-                                text: "Partly Cloudy"
-                                font.pixelSize: 18
-                                color: "black"
+                            Button {
+                                id: zoomInButton
+                                anchors.top: expandMapButton.bottom
+                                anchors.left: parent.left
+                                width: 30
+                                height: 30
+                                text: "+"
+                                onClicked: {
+                                    if (map.zoomLevel < map.maximumZoomLevel) {
+                                        map.zoomLevel++
+                                    }
+                                }
+                            }
+
+                            Button {
+                                id: zoomOutButton
+                                anchors.top: zoomInButton.bottom
+                                anchors.left: parent.left
+                                width: 30
+                                height: 30
+                                text: "-"
+                                onClicked: {
+                                    if (map.zoomLevel > map.minimumZoomLevel) {
+                                        map.zoomLevel--
+                                    }
+                                }
                             }
                         }
-                    }
 
-                    Text {
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-                        anchors.margins: 10
-                        text: "25°C
-                        font.pixelSize: 30
-                        font.weight: Font.Bold
-                        color: "white"
-                        style: Text.Outline
-                        styleColor: "black"
-                    }*/
-                }
+                        Rectangle
+                        {
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.margins: 10
+                            width: contentColumn.width + 20
+                            height: contentColumn.height + 20
+                            color: "white"
+                            opacity: 0.7
+                            radius: 5
+
+
+                    }
+                    }
                 }
             }
         }
-    }
     //-----------------------------------------------------LATITUDE/LONGITUDE-----------------------------------------------------------
     Item{
         id: latitudelongitude;
