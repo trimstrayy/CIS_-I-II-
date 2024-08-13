@@ -29,7 +29,7 @@ ApplicationWindow {
     AnimatedImage {
         id: animatedImage
         // source: "photos/weathervid.gif"
-        source: "photos/clearnepal.jpg"
+        source: "photos/background.jpeg"
         // source: "photos/fug.jpg"
         // source: "photos/partlyclouds.jpg"
         // source: "photos/thunderbg.jpg"
@@ -508,6 +508,39 @@ ApplicationWindow {
             }
 
     }
+
+    Button {
+        id: weatherinfotab
+        width: 50
+        height: 50
+        anchors.right: parent.right
+        anchors.rightMargin: 1
+        anchors.top: parent.top
+        anchors.topMargin: 600
+
+        background: Rectangle {
+            color: "transparent"
+            border.color: "transparent"
+        }
+
+        contentItem: Image {
+            source: "photos/info.jpg"
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
+        }
+        onClicked: {
+              var component = Qt.createComponent("Weatherinfo.qml");
+              if (component.status === Component.Ready) {
+                  var weatherWindow = component.createObject(main);
+                  weatherWindow.show();
+              } else {
+                  console.error("Error loading WeatherInfo.qml:", component.errorString());
+              }
+          }
+
+    }
+
+
     Item {
          Layout.fillHeight: true
      }
@@ -540,7 +573,7 @@ ApplicationWindow {
                    Layout.columnSpan: 2
                    Layout.fillWidth: true
                    height: 150
-                   color: boxColor1
+                   color: "transparent"
                    opacity: 0.8
                    radius: 10
                    width: parent.width
@@ -604,7 +637,7 @@ ApplicationWindow {
                    Layout.fillWidth: true
                    height: 250
                    width: parent.width
-                   color: "white"//boxColor3
+                   color: "transparent"//boxColor3
                    opacity: 0.8
                    radius: 10
 
@@ -702,7 +735,7 @@ ApplicationWindow {
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: 250
-                color: boxColor1  // Light gray background
+                color: boxColor1 // Light gray background
                 opacity: 0.8
                 radius: 10
 
@@ -723,6 +756,26 @@ ApplicationWindow {
                         columns: 3  // Display metrics in two columns
                         rowSpacing: 20
                         columnSpacing: 40
+                        Button{
+                            id: expandinfo
+                            anchors.bottom: parent.bottom
+                            anchors.right:  parent.right
+                            width: 30
+                            height: 30
+                            text:"i"
+
+                            //the main function :
+                            onClicked: {
+                                var component = Qt.createComponent("Weatherinfo.qml");
+                                if (component.status === Component.Ready) {
+                                    var weatherWindow = component.createObject(main);
+                                    weatherWindow.show();
+                                } else {
+                                    console.error("Error loading WeatherInfo.qml:", component.errorString());
+                                }
+}
+
+                        }
 
                         Repeater {
                             id: weatherMatrix
@@ -1230,7 +1283,8 @@ ApplicationWindow {
    }
 
     Component.onCompleted: {
-                    weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
+      //weatherForecast.weatherInfoUpdated("Test data");
+        weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
                     weatherForecast.get_current_weather(main.latitude,main.longitude);
     }
 

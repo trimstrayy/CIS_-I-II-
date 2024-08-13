@@ -22,12 +22,13 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-INCLUDEPATH += ../../curl/include \
-               C:/Coding/software/Qt/6.7.2/msvc2019_arm64/include/QtPositioning \
-               C:/Coding/software/Qt/6.7.2/msvc2019_arm64/include/QtLocation
+INCLUDEPATH += C:/curl/curl-8.9.0_1-win64-mingw/include \
+        C:/Qt/6.8.0/include/QtPositioning \
+        C:/Qt/6.8.0/include/QtLocation
 
-LIBS += -L../../curl/lib -lcurl
+LIBS += -LC:\curl\curl-8.9.0_1-win64-mingw\lib -lcurl
 
 DISTFILES += \
     Newtab.qml \
-    WeatherProject.qml
+    WeatherProject.qml \
+    Weatherinfo.qml
