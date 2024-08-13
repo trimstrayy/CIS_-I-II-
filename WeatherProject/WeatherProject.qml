@@ -821,104 +821,104 @@ ApplicationWindow {
         }
     }
     //--------------------------------------------------------MAP------------------------------------------------------------------
-    Item {
-            anchors.fill: parent
-            anchors.margins: 20
+        Item {
+                anchors.fill: parent
+                anchors.margins: 20
 
-            GridLayout {
-                anchors.left: parent.left
-                anchors.top: parent.top
-                width: parent.width * 0.4
-                columns: 2
-                rowSpacing: 200
-                columnSpacing: 200
-                anchors.leftMargin: 1000
-                anchors.topMargin: 125
+                GridLayout {
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    width: parent.width * 0.4
+                    columns: 2
+                    rowSpacing: 200
+                    columnSpacing: 200
+                    anchors.leftMargin: 1000
+                    anchors.topMargin: 125
 
-                Rectangle {
-                    Layout.columnSpan: 2
-                    Layout.fillWidth: true
-                    height: 500
-                    color: "white"//boxColor4
-                    opacity: 0.7
-                    radius: 10
+                    Rectangle {
+                        Layout.columnSpan: 2
+                        Layout.fillWidth: true
+                        height: 500
+                        color: "white"//boxColor4
+                        opacity: 0.7
+                        radius: 10
 
-                    Item {
-                        anchors.fill: parent
-                        id: mapContainer
-                        Map {
-                            id: map
+                        Item {
                             anchors.fill: parent
-                            plugin: Plugin {
-                                name: "osm"
-                            }
-                            center: QtPositioning.coordinate(27.7172, 85.3240) // Coordinates for Kathmandu
-                            zoomLevel: 13 // Adjust this value to set the initial zoom level
+                            id: mapContainer
+                            Map {
+                                id: map
+                                anchors.fill: parent
+                                plugin: Plugin {
+                                    name: "osm"
+                                }
+                                center: QtPositioning.coordinate(27.7172, 85.3240) // Coordinates for Kathmandu
+                                zoomLevel: 13 // Adjust this value to set the initial zoom level
 
-                            Button {
-                                id: expandMapButton
+                                Button {
+                                    id: expandMapButton
+                                    anchors.top: parent.top
+                                    anchors.left: parent.left
+                                    width: 30
+                                    height: 30
+                                    text: "⛶"
+                                    onClicked: {
+                                        var component = Qt.createComponent("Newtab.qml");
+                                        if (component.status === Component.Ready) {
+                                            var newWindow = component.createObject(main, {"latitude": map.center.latitude, "longitude": map.center.longitude});
+                                            newWindow.show();
+                                        } else {
+                                            console.error("Error loading newTab.qml:", component.errorString());
+                                        }
+                                    }
+                                }
+
+                                Button {
+                                    id: zoomInButton
+                                    anchors.top: expandMapButton.bottom
+                                    anchors.left: parent.left
+                                    width: 30
+                                    height: 30
+                                    text: "+"
+                                    onClicked: {
+                                        if (map.zoomLevel < map.maximumZoomLevel) {
+                                            map.zoomLevel++
+                                        }
+                                    }
+                                }
+
+                                Button {
+                                    id: zoomOutButton
+                                    anchors.top: zoomInButton.bottom
+                                    anchors.left: parent.left
+                                    width: 30
+                                    height: 30
+                                    text: "-"
+                                    onClicked: {
+                                        if (map.zoomLevel > map.minimumZoomLevel) {
+                                            map.zoomLevel--
+                                        }
+                                    }
+                                }
+                            }
+
+                            Rectangle
+                            {
+                                anchors.left: parent.left
                                 anchors.top: parent.top
-                                anchors.left: parent.left
-                                width: 30
-                                height: 30
-                                text: "⛶"
-                                onClicked: {
-                                    var component = Qt.createComponent("Newtab.qml");
-                                    if (component.status === Component.Ready) {
-                                        var newWindow = component.createObject(main, {"latitude": map.center.latitude, "longitude": map.center.longitude});
-                                        newWindow.show();
-                                    } else {
-                                        console.error("Error loading newTab.qml:", component.errorString());
-                                    }
-                                }
-                            }
+                                anchors.margins: 10
+                                width: contentColumn.width + 20
+                                height: contentColumn.height + 20
+                                color: "white"
+                                opacity: 0.7
+                                radius: 5
 
-                            Button {
-                                id: zoomInButton
-                                anchors.top: expandMapButton.bottom
-                                anchors.left: parent.left
-                                width: 30
-                                height: 30
-                                text: "+"
-                                onClicked: {
-                                    if (map.zoomLevel < map.maximumZoomLevel) {
-                                        map.zoomLevel++
-                                    }
-                                }
-                            }
 
-                            Button {
-                                id: zoomOutButton
-                                anchors.top: zoomInButton.bottom
-                                anchors.left: parent.left
-                                width: 30
-                                height: 30
-                                text: "-"
-                                onClicked: {
-                                    if (map.zoomLevel > map.minimumZoomLevel) {
-                                        map.zoomLevel--
-                                    }
-                                }
-                            }
                         }
-
-                        Rectangle
-                        {
-                            anchors.left: parent.left
-                            anchors.top: parent.top
-                            anchors.margins: 10
-                            width: contentColumn.width + 20
-                            height: contentColumn.height + 20
-                            color: "white"
-                            opacity: 0.7
-                            radius: 5
-
-
-                    }
+                        }
                     }
                 }
             }
-        }
     //-----------------------------------------------------LATITUDE/LONGITUDE-----------------------------------------------------------
     Item{
         id: latitudelongitude;
@@ -940,7 +940,7 @@ ApplicationWindow {
                 Layout.columnSpan: 2
                 Layout.fillWidth: true
                 height: 60
-                color: "#E0E0E0"
+                color: "transparent"
                 opacity: 0.8
                 radius: 15
                 anchors.topMargin: parent.topMargin

@@ -5,36 +5,62 @@ import QtQuick.Window 2.12
 import QtLocation 5.12
 import QtPositioning 5.12
 
-ApplicationWindow {
+Page {
     id: fullMapWindow
     visible: true
-    width: 2560
-    height: 1440
-    // Add these properties to receive values
-    property real initialLatitude: 27.7083
-    property real initialLongitude: 85.3206
-
-Page{
-
-    id: fullMapPage
-    visible: true
-    anchors.fill: parent
+    width: 1447
+    height: 900
     title: "Full Map View"
+    property real latitude: 51.5074  // Default to London coordinates
+    property real longitude: -0.1278 // Adjust these as needed
 
-
-    // Use the received values
-    property real latitude: fullMapWindow.initialLatitude
-    property real longitude: fullMapWindow.initialLongitude
-    property bool showMapbool: true
-
+    function closePage() {
+        fullMapWindow.visible = false
+        // If this page is opened in a separate window, use the following instead:
+        // Qt.quit()
+    }
 
     Map {
+        id: map
         anchors.fill: parent
-        plugin: Plugin {
-            name: "osm"
+        plugin: mapPlugin
+        center: QtPositioning.coordinate(latitude, longitude)
+        zoomLevel: 12
+
+        Component.onCompleted: {
+            console.log("Map center:", center.latitude, center.longitude)
+            console.log("Zoom level:", zoomLevel)
         }
-        center: QtPositioning.coordinate(fullMapPage.latitude, fullMapPage.longitude)
-        zoomLevel: 15
     }
-}
+
+    Plugin {
+        id: mapPlugin
+        name: "osm"  // Using standard OpenStreetMap tiles
+    }
+
+    Button {
+        id: closeButton
+        anchors.top: parent.top
+        anchors.right: parent.right
+        width: 30
+        height: 30
+        text: "✕"
+        onClicked: closePage()
+    }
+
+    Item {
+        anchors.fill: parent
+        focus: true
+        Keys.onPressed: function(event) {
+            if (event.key === Qt.Key_Escape) {
+                closePage();
+                event.accepted = true;
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        console.log("Map component loaded")
+        forceActiveFocus()
+    }
 }
