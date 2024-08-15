@@ -15,6 +15,7 @@
 extern QString API_KEY = "01b70166b923c25c030d53acdc92e93d";
 extern QJsonParseError error;
 
+
 QByteArray response(char []);
 WeatherInfo::WeatherInfo(QObject *parent) : QObject(parent) {
     curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -227,6 +228,8 @@ void WeatherInfo::emitCombinedData()
 }
 
 
+
+
 // WeatherForecast implementation
 WeatherForecast::WeatherForecast(QObject *parent) : QObject(parent) {
 
@@ -244,11 +247,8 @@ WeatherForecast::~WeatherForecast() {
     curl_global_cleanup();
 }
 
-//Main function
-// QString WeatherForecast::main(QString latitude, QString longitude)
 
-
-// Test
+// Functions of Fetching the Weather Metrics Data
 
 QString WeatherForecast::getCity(QString city_name)
 {
@@ -381,12 +381,7 @@ void WeatherForecast::get_current_weather(QString latitude, QString longitude)
 }
 
 
-//Fucntions
-QString WeatherForecast::get_date_hourly_data(QJsonArray forecast, int index)
-{
-    return "";
-}
-
+//Fucntions of fetching Hourly Forecast Data
 QString WeatherForecast::get_icon_hourly_data(QJsonArray forecast, int index)
 {
     QString icon;
@@ -433,10 +428,8 @@ void WeatherForecast::get_temperature_hourly(QString latitude, QString longitude
     for(int i = 0 ; i < index ; i++){
     QString temperature = "";
     QString icon = "";
-    QString dt;
     temperature = get_temperature_hourly_data(forecast, i);
     icon = get_icon_hourly_data(forecast, i);
-    dt = get_date_hourly_data(forecast, i);
     qDebug() << temperature << "\n";
     qDebug() << icon << "\n";
 
@@ -477,42 +470,11 @@ QString WeatherForecast::get_icon(QString latitude, QString longitude)
     qDebug() << icon << "\n";
 
     int id = weather_data["id"].toInt();
-    QString id_s;
-    if(id > 200 && id < 300)
-    {
-        id_s = "2xx";
-    }
-    else if(id > 300 && id < 400)
-    {
-        id_s = "3xx";
-    }
-    else if(id > 500 && id < 600)
-    {
-        id_s = "5xx";
-    }
-    else if(id > 600 && id < 700)
-    {
-        id_s = "6xx";
-    }
-    else if(id > 700 && id < 800)
-    {
-        id_s = "7xx";
-    }
-    else if(id > 800 && id < 805)
-    {
-        id_s = "8x";
-    }
-    else if(id == 800)
-    {
-        id_s = "800";
-    }
-
-    qDebug() << id_s;
 
     std::string icon_string_url = "https://openweathermap.org/img/wn/"+icon.toStdString()+"@2x.png";
     QString icon_url = QString::fromStdString(icon_string_url);
+
     qDebug() << id ;
-    // QString icon_url = "/Coding/c++/git/desing/I-II-Project-/Project Pic src/cloudy.png";
     return icon_url;
 }
 
@@ -632,8 +594,9 @@ QString WeatherForecast::get_latitude(QString city_name)        // get's latitud
     // Converting std::string to char type
     strcpy(url, string_url.c_str());
 
+    //fetching data
     QJsonDocument jsonDoc = response_data(response(url));
-    qDebug() << jsonDoc;
+
     QString result = "error";  // Default to "error"
 
     if (!jsonDoc.isEmpty() && jsonDoc.isArray()) {

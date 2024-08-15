@@ -68,7 +68,6 @@ public:
     Q_INVOKABLE void get_temperature_hourly(QString latitude, QString longitude, int index);
     Q_INVOKABLE QString get_temperature_hourly_data(QJsonArray forecast, int index);
     Q_INVOKABLE QString get_icon_hourly_data(QJsonArray forecast, int index);
-    Q_INVOKABLE QString get_date_hourly_data(QJsonArray forecast, int index);
 
     Q_INVOKABLE void fetchResult(const QString &city) {
         m_weatherInfo.fetchResult(city);
@@ -76,7 +75,6 @@ public:
 signals:
     void temperatureHourlyData(const QString &temperature, int index);
     void iconhourlyData(const QString &icon, int index);
-    void datehourlyData(const QString &date, int index);
     void humidityData(const QString humidity);
     void cloudinessData(const QString clouds);
     void pressureData(const QString pressure);

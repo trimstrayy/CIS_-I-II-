@@ -20,24 +20,6 @@ ApplicationWindow {
     property var temperatures: [] // Array to store temperatures
     property var icons: [] // Array to store weather icons
     property real humiduty: 0
-    // property real temperature: weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
-    // property var temperatures: weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
-
-
-    // AnimatedImage {
-    //         id: animatedImage
-    //         // source: "photos/weathervid.gif"
-    //         source: "photos/clearnepal.jpg"
-    //         // source: "photos/background.jpeg"
-    //         // source: "photos/fug.jpg"
-    //         // source: "photos/partlyclouds.jpg"
-    //         // source: "photos/thunderbg.jpg"
-    //         // source: "photos/rainybg3.jpg"
-    //         anchors.fill: parent                                                                  // BACKGROUND FOR MAIN WINDOW
-    //         fillMode: Image.PreserveAspectCrop
-    //     }
-
-
 
     Item {
         anchors.fill: parent
@@ -202,14 +184,14 @@ ApplicationWindow {
                         throw "Map or map.center is not available";
                     }
 
-                    latitudelongitude.children[0].children[0].children[0].children[1].text = `${latNum.toFixed(4)} and ${lonNum.toFixed(4)}`;
+                    latitudelongitude.children[0].children[0].children[0].children[2].text = `${latNum.toFixed(4)} and ${lonNum.toFixed(4)}`;
                     maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
                     maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(latitude, longitude);
                     maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(latitude, longitude)} °C`;
                     maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(latitude, longitude);
                     weatherForecast.get_temperature_hourly(latitude, longitude, 11);
                     weatherForecast.get_current_weather(latitude, longitude);
-                    // weatherForecast.get_aqi(latitude, longitude);
+                    weatherForecast.get_aqi(latitude, longitude);
                     console.log(aqi.children[0].children[0].children[0].children[0]);
                 }  catch (error) {
                     errorMessage = error;
@@ -222,28 +204,6 @@ ApplicationWindow {
                     anchors.fill: parent
                     anchors.margins: 5
                     spacing: 10
-                // RowLayout {
-                //     anchors.fill: parent
-                //     anchors.margins: 5
-                //     spacing: 5
-
-                    // TextField {
-                    //     id: searchField
-                    //     placeholderText: "Search"
-                    //     color: "white"
-
-                    //     background: Rectangle {
-                    //         color: "transparent"
-                    //     }
-
-                    //     anchors.left: parent.left
-                    //     anchors.right: searchButton.left
-                    //     anchors.verticalCenter: parent.verticalCenter
-                    //     leftPadding: 5
-                    //     rightPadding: 5
-                    //     padding: 5
-                    //     onAccepted: parent.parent.performSearch()
-                    // }
                     TextField {
                         id: searchField
                         placeholderText: "Search location"
@@ -281,26 +241,6 @@ ApplicationWindow {
                                 anchors.centerIn: parent
                              }
 
-                            // onClicked: {
-                            //     var latitude = weatherForecast.get_latitude(searchField.text);
-                            //     var longitude = weatherForecast.get_longitude(searchField.text);
-
-
-                            //     latitudelongitude.children[0].children[0].children[0].children[1].text = `${latitude} and ${longitude}`;
-                            //     maincontent.children[0].children[0].children[0].children[0].children[0].text = weatherForecast.getCity(searchField.text);
-                            //     maincontent.children[0].children[0].children[0].children[0].children[1].text = weatherForecast.get_weather(latitude, longitude);
-                            //     maincontent.children[0].children[0].children[0].children[3].text = `${weatherForecast.get_temperature(latitude, longitude)} °C`;
-                            //     maincontent.children[0].children[0].children[0].children[2].source = weatherForecast.get_icon(latitude, longitude);
-
-
-                            //     // console.log(maincontent.children[0].children[1].children[0].children[1].children[0].children[0].children[2])
-                            //     weatherForecast.get_temperature_hourly(latitude, longitude, 11);
-                            //     weatherForecast.get_current_weather(latitude,longitude);
-                            //     // var temp = weatherForecast.get_temperature_hourly_data(10);
-                            //     // console.log(temp);
-
-                            //     map.center = QtPositioning.coordinate(latitude,longitude);
-                            // }
                             onClicked: parent.parent.performSearch()
 
                          }
@@ -308,31 +248,6 @@ ApplicationWindow {
                 }
         }
     }
-
-
-
-
-
-
-    /* Blue indicator
-                Rectangle {
-                    width: 10
-                    height: 50
-                    color: "blue"
-                    anchors {
-                        left: parent.left
-                        leftMargin: -10                                            DRAWER MA BLUE ENABLE KO LAGI KUN PAGE MA XA BHANERA
-                        top: parent.children[activeIndex].top
-                    }
-                }
-
-
-            // Placeholder for the content next to the side menu
-            Item {
-                width: parent.width - 150
-                height: parent.height
-            }*/
-
 
     /*// Define color variables
         property color boxColor1: "#3498db"  // Light blue
@@ -748,26 +663,6 @@ ApplicationWindow {
                         columns: 3  // Display metrics in two columns
                         rowSpacing: 20
                         columnSpacing: 40
-//                         Button{
-//                             id: expandinfo
-//                             anchors.bottom: parent.bottom
-//                             anchors.right:  parent.right
-//                             width: 30
-//                             height: 30
-//                             text:"i"
-
-//                             //the main function :
-//                             onClicked: {
-//                                 var component = Qt.createComponent("Weatherinfo.qml");
-//                                 if (component.status === Component.Ready) {
-//                                     var weatherWindow = component.createObject(main);
-//                                     weatherWindow.show();
-//                                 } else {
-//                                     console.error("Error loading WeatherInfo.qml:", component.errorString());
-//                                 }
-// }
-
-
 
                         Repeater {
                             id: weatherMatrix
@@ -790,12 +685,6 @@ ApplicationWindow {
                                     Layout.alignment: Qt.AlignVCenter
                                 }
 
-                                // Text {
-                                //     text: model.label + " " + model.value
-                                //     font.pixelSize: 18
-                                //     color: "black"
-                                //     Layout.alignment: Qt.AlignVCenter
-                                // }
                                 Column {
                                     Text {
                                         text: model.label
@@ -839,7 +728,7 @@ ApplicationWindow {
                         Layout.columnSpan: 2
                         Layout.fillWidth: true
                         height: 500
-                        color: "white"//boxColor4
+                        color: "transparent"//boxColor4
                         opacity: 0.7
                         radius: 10
 
@@ -946,21 +835,16 @@ ApplicationWindow {
                 anchors.topMargin: parent.topMargin
                 RowLayout {
                     anchors.fill: parent
-                    anchors.margins: 20
                     spacing: 10
-                    anchors.topMargin: 10
+
+                     Item { Layout.fillWidth: true } // Spacer
+
                     Image {
                             source: "photos/maps-and-flags.png"
                             sourceSize.width: 24
                             sourceSize.height: 24
                             Layout.alignment: Qt.AlignVCenter
                         }
-
-                    // Text {
-                    //     text: "Location"
-                    //     font.pixelSize: 24
-                    //     font.weight: Font.Bold
-                    // }
 
                     Text {
                         id: latText;
@@ -1041,47 +925,9 @@ ApplicationWindow {
                }
            }
        }
-       // //----------------------------------------------------AIR QUALITY INDEX----------------------------------------
-       // Item{
-       //     anchors.fill: parent
-       //     anchors.margins: 20
 
-       //     GridLayout {
-       //         anchors.left: parent.left
-       //         anchors.top: parent.top
-       //         width: parent.width * 0.4
-       //         columns: 2
-       //         rowSpacing: 200
-       //         columnSpacing: 200
-       //         anchors.leftMargin: 1000    //kati left ma xa
-       //         anchors.topMargin: 760                                //top  bata kati tala xa
 
-       //         Rectangle {
-       //             Layout.columnSpan: 2
-       //             Layout.fillWidth: true
-       //             height: 60
-       //             color: "#E0E0E0"
-       //             opacity: 0.8
-       //             radius: 10
-       //             anchors.topMargin: parent.topMargin
-       //             ColumnLayout {
-       //                 anchors.fill: parent
-       //                 anchors.margins: 20
-       //                 spacing: 10
-       //                 anchors.topMargin: 10
-
-       //                 Text {
-       //                     text: "Air Quality Index"
-       //                     font.pixelSize: 30
-       //                     font.weight: Font.Bold
-       //                     color: "#333333"
-       //                 }
-
-       //             }
-       //         }
-       //     }
-
-       // }
+    //-------------------------------------------------CONECTION--------------------------------------------------------
     Connections {
        target: weatherForecast
        function onTemperatureHourlyData(temperature, index) {
@@ -1181,8 +1027,6 @@ ApplicationWindow {
     Component.onCompleted: {
       //weatherForecast.weatherInfoUpdated("Test data");
         weatherForecast.get_temperature_hourly(main.latitude, main.longitude, 11);
-                    weatherForecast.get_current_weather(main.latitude,main.longitude);
+        weatherForecast.get_current_weather(main.latitude,main.longitude);
     }
-
-
 }

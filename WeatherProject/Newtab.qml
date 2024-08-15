@@ -1,4 +1,5 @@
 import QtQuick 2.12
+import QtQuick
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 2.15
 import QtQuick.Window 2.12
@@ -26,11 +27,50 @@ Page {
         plugin: mapPlugin
         center: QtPositioning.coordinate(latitude, longitude)
         zoomLevel: 12
+        property geoCoordinate startCentroid
 
         Component.onCompleted: {
             console.log("Map center:", center.latitude, center.longitude)
             console.log("Zoom level:", zoomLevel)
         }
+
+        // PinchHandler {
+        //     id: pinch
+        //     target: null
+        //     onActiveChanged: if (active) {
+        //         map.startCentroid = map.toCoordinate(pinch.centroid.position, false)
+        //     }
+        //     onScaleChanged: (delta) => {
+        //         map.zoomLevel += Math.log2(delta)
+        //         map.alignCoordinateToPoint(map.startCentroid, pinch.centroid.position)
+        //     }
+        //     onRotationChanged: (delta) => {
+        //         map.bearing -= delta
+        //         map.alignCoordinateToPoint(map.startCentroid, pinch.centroid.position)
+        //     }
+        //     grabPermissions: PointerHandler.TakeOverForbidden
+        // }
+
+        //Mouse Drag
+        DragHandler {
+              id: drag
+              target: null
+              onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
+          }
+
+        //Zoom In function
+        Shortcut {
+                   enabled: map.zoomLevel < map.maximumZoomLevel
+                   sequence: StandardKey.ZoomIn
+                   onActivated: map.zoomLevel = Math.round(map.zoomLevel + 1)
+               }
+
+        //Zoom Out function
+        Shortcut {
+               enabled: map.zoomLevel > map.minimumZoomLevel
+               sequence: StandardKey.ZoomOut
+               onActivated: map.zoomLevel = Math.round(map.zoomLevel - 1)
+           }
     }
 
     Plugin {
